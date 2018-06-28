@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>task5</title>
+	<style>
+	    * {padding: 0; margin: 0;}
+        .page {
+        	min-height: 60px;
+        	max-width: 280px;
+        	float: left;
+        	margin-left: 200px;
+        	border-radius: 5px;
+        	background: linear-gradient(#00FFE8,#0588FF);/*渐变*/
+        	background: -webkit-linear-gradient(#00FFE8,#0588FF);
+        	background: -o-linear-gradient(#00FFE8,#0588FF);
+        	background: -moz-linear-gradient(#00FFE8,#0588FF);
+        	padding: 5px;
+        }
+        .function {
+        	height: 24px;
+        	width: 280px;
+        	float: left;
+        }
+        .function input[type=text] {
+        	width: 80px;
+        	height: 24px;
+        	float: left;
+        	outline: none;
+        	border: none;
+        	background-color: #0588FF;
+        }
+        .function input[type=button] {
+        	width: 40px;
+        	height: 24px;
+        	float: left;
+        	margin-left: 10px;
+        	background-color: #00AFFF;
+        	border: none;
+        	border-radius: 2px;
+        	outline: none;
+        }
+        .display {height: 50px;}
+        .f1 {
+        	width: 40px;
+        	background-color: #00DEFF;
+        	border-radius: 4px;
+            float: left;
+            margin-right: 6px;
+            margin-top: 5px;
+        }
+	</style>
+</head>
+<body>
+  <div class="page">
+	<div class="function">
+		<input type="text" id="insert">
+        <input type="button" id="plus-num" value="添加" onclick="plusn()">
+		<input type="button" id="plus-l" value="左加" onclick="plusl()">
+		<input type="button" id="plus-r" value="右加" onclick="plusr()">
+        <input type="button" id="resort" value="排序" onclick="reSort()">
+	</div>
+    <div class="display" id="display"></div>
+<script type="text/javascript">
+function plusn() {//判断是否为数字
+    var maxlen = document.getElementById("display").childNodes.length;//大于等于60停止
+    if (maxlen >= 20) {
+        alert("最多20个");
+        return false;
+    };
+    var Num = document.getElementById("insert").value;
+    if (!isNaN(Num)) {
+       if (Num >= 10 && Num<=100) {//判断是否在10到100之间
+           var outDivNode = document.getElementById("display");
+           var newDiv = document.createElement("div")
+           newDiv.setAttribute("class", "f1");
+           newDiv.setAttribute("onclick", "clickdel(this)");
+           outDivNode.appendChild(newDiv);
+           var lchild = outDivNode.lastChild;
+        
+           lchild.style.height = Num+"px";
+           var X = 105 - Num;
+           lchild.style.marginTop = X + "px";
+       }
+       else {
+           alert("请输入10-100以内的数字！");
+       };
+    }
+    else {
+       alert("请输入数字！");
+    };
+};
+function plusl() {
+    var maxlen = document.getElementById("display").childNodes.length;
+    if (maxlen >= 20) {
+        alert("最多20个");
+        return false;
+    };
+    var Num = document.getElementById('insert').value;
+
+    var outDivNode = document.getElementById("display");
+	var fchild = outDivNode.firstChild;
+	var newDiv = document.createElement("div");
+	newDiv.setAttribute("class", "f1");
+	newDiv.setAttribute("onclick", "clickdel(this)");//点击属性
+	outDivNode.insertBefore(newDiv,fchild);//插入到前面
+	var fchild = outDivNode.firstChild;//不设置会生成一个空元素
+	
+    var x = Num;
+    fchild.style.height = x +"px";//设置高度
+    var X = 105 - x;//为了使底部对齐，采取反选的方法。
+    fchild.style.marginTop = X + "px";
+};
+function plusr() {
+    var maxlen = document.getElementById("display").childNodes.length;
+    if (maxlen >= 20) {
+        alert("最多20个");
+        return false;
+    };
+     var Num = document.getElementById('insert').value;
+	var outDivNode = document.getElementById("display");
+	var newDiv = document.createElement("div");
+	newDiv.setAttribute("class", "f1");
+	newDiv.setAttribute("onclick", "clickdel(this)");
+	outDivNode.appendChild(newDiv);
+	var lchild = outDivNode.lastChild;
+
+	x = Num;
+    lchild.style.height = x+"px";//设置高度
+    var X = 105 - x;//为了使底部对齐。采取反选的方法
+    lchild.style.marginTop = X + "px"; //
+};
+function reSort() {//排序
+    var outDivNode = document.getElementById("display");
+    var innerDivNodes = outDivNode.childNodes;
+    var divlist = new Array;//设置数组进行排序
+    for (var i = 0;i<innerDivNodes.length;i++) {
+        divlist[i] = innerDivNodes[i].offsetHeight;//获取高度
+    };
+    //divlist.sort();//从小到大默认
+    divlist.sort(function mas(a,b) {
+        return b- a;
+    });//从大到小
+    for (var i = 0;i<innerDivNodes.length;i++) {
+        innerDivNodes[i].style.height = divlist[i]+"px";//动态设置高度
+        var X = 105 - divlist[i];//为了使底部对齐。采取反选的方法
+        innerDivNodes[i].style.marginTop = X + "px";
+    };
+};
+function clickdel(divNode) {//点击方法
+    var pNode = divNode.parentNode;
+    pNode.removeChild(divNode);
+};
+</script>
+</body>
+</html>
