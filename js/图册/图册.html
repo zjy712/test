@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>相册</title>
+    <style>
+        * {
+            background-color: #ccc;
+
+        }
+
+        .box {
+            width: 668px;
+            height: 710px;
+            margin: 50px 0 0 300px;
+            float: left;
+        }
+
+        .line1 {
+            height: 120px;
+        }
+
+        .line1 img {
+            float: left;
+            width: 142px;
+            height: 90px;
+            margin-right: 25px;
+            transition-duration: 0.5s;
+            cursor: pointer;
+        }
+
+        .line1 img:hover {
+
+            box-shadow: 3px 5px 13px 4px rgba(0, 0, 0, 0.2);
+            transform: translateY(-15px);
+        }
+
+        .show img {
+            width: 636px;
+            height: 396px;
+            transition-duration: 0.5s;
+        }
+
+
+        .box2 {
+            float: left;
+            margin-top: 70px;
+        }
+
+        .nodeSmall a{
+            display: block;
+            width: 60px;
+            height: 60px;
+            background: url(../images/erweima.png) no-repeat;
+        }
+        .erweima img{
+            width: 120px;
+            height: 120px;
+        }
+        .hide {
+            display: none;
+        }
+        .show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="title">
+            <h3>相册</h3>
+        </div>
+        <div class="line1" id="choose">
+            <img src="../images/shanshui (1).jpg" alt="相册1">
+            <img src="../images/shanshui (2).jpg" alt="相册2">
+            <img src="../images/shanshui (3).jpg" alt="相册3">
+            <img src="../images/shanshui (4).jpg" alt="相册4">
+        </div>
+        <div class="show">
+            <img id="image" src="../images/shanshui (1).jpg" alt="" id="show">
+
+        </div>
+        <span id="des">图片1</span>
+    </div>
+    <div class="box2">
+        <input type="button" value="隔行变色" id="btn">
+        <ul id="uu">
+            <li>红旗</li>
+            <li>五菱宏光</li>
+            <li>福特</li>
+            <li>拉铂金</li>
+            <li>奥托</li>
+            <li>三菱</li>
+            <li>法拉利</li>
+            <li>保时捷</li>
+        </ul>
+        <div class="nodeSmall" id="node_small">
+            <a href="#"></a>
+            <div class="erweima hide" id="er">
+                <img src="../images/erweima_big.jpg" alt="">
+            </div>
+        </div>
+        <input type="text" name="" id="search" value="请输入搜索内容">
+    </div>
+</body>
+<script>
+    function my$(id) {
+        return document.getElementById(id);
+    }
+    var aObjs = my$("choose").getElementsByTagName("img");
+    //循环遍历
+    for (let i = 0; i < aObjs.length; i++) {
+        aObjs[i].onclick = function () {
+            my$("image").src = this.src;
+            my$("des").innerText = this.alt;
+        }
+    };
+    var bOjs = my$("btn");
+    bOjs.onclick = function () {
+        var list = my$("uu").getElementsByTagName("li");
+        for (let i = 0; i < list.length; i++) {
+            const element = list[i];
+            if (i % 2 == 0) {
+                element.style.backgroundColor = "pink";
+            } else {
+                element.style.backgroundColor = "red";
+            }
+        }
+    };
+    var cObs = my$("node_small").getElementsByTagName("a")[0];
+    cObs.onmouseover = function () {
+        my$("er").className  = "erweima show";
+    };
+    cObs.onmouseout = function () {
+        my$("er").className = "erweima hide";
+    }
+    my$("search").onfocus = function () {
+        if (this.value=="请输入搜索内容") {
+            this.value = "";
+            this.style.color = "#000";
+        } 
+    }
+    my$("search").onblur = function () {
+            if (this.value.length == 0) {
+                this.value = "请输入搜索内容";
+
+            }
+        }
+    var list = my$("uu").getElementsByTagName("li");
+    for (let i = 0; i < list.length; i++) {
+        const ele = list[i];
+        ele.setAttribute("score",(i+1)*10);
+        ele.onclick = function () {
+            alert(ele.getAttribute("score"));
+        }
+    }
+</script>
+
+</html>

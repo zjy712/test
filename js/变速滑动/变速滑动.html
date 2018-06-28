@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>变速滑动</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            
+        }
+        body {
+            background-color: #363636;
+        }
+        .nav {
+            margin: 200px auto;
+            width: 860px;
+            height: 45px;
+            background-color: #FEFEFE;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+        li {
+            float: left;
+            height: 45px;
+            width: 90px;
+            line-height: 45px;
+            font-size: 18px;
+            list-style: none;
+            text-align: center;
+           cursor: pointer;
+        }
+        span {
+            display: block;
+            height: 40px;
+            width: 90px;
+           border-radius: 10px;
+            background-color: rgba(0, 0, 0, .3);
+             position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <span id="cloud"></span>
+        <ul id="navBar">
+            <li>这是选项</li>
+            <li>这是选项</li>
+            <li>这是选项</li>
+            <li>这是选项</li>
+            <li>这是选项</li>
+            <li>这是选项</li>
+            <li>这是选项</li>
+            <li>这是选项</li>
+        </ul>
+    </div>
+</body>
+<script>
+    function my$(id) {
+            return document.getElementById(id);
+        }
+    function animate(element, target) {
+            clearInterval(element.timeId);
+            element.timeId = setInterval(function () {
+                var current = element.offsetLeft;
+                var step = (target - current) / 10;
+                step = step > 0 ? Math.ceil(step) : Math.floor(step);
+                current += step;
+                element.style.left = current + "px";
+                if (current == target) {
+                    clearInterval(element.timeId);
+
+                } else {
+                    console.log("当前位置" + current + "目标位置" + target + "每次移动" + step);
+                }
+
+            }, 50);
+        };
+    var cloud = my$("cloud");
+    var list = my$("navBar").children;
+    for (let i = 0; i < list.length; i++) {
+        const element = list[i];
+        //鼠标进入
+        element.onmouseover = mouseoverHandle;
+       // 鼠标点击
+        element.onclick = clickHandle;
+        //鼠标离开
+   //     element.onmouseout = mouseoutHandle;
+    }
+    function mouseoverHandle() {
+        animate(cloud,this.offsetLeft);
+    }
+    //记录上次的位置
+    var lastPosition = 0;
+    function clickHandle() {
+        lastPosition = this.offsetLeft;
+    }
+    function mouseoutHandle() {
+        animate(cloud,lastPosition);
+    }
+</script>
+</html>

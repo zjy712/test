@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #box {
+            height: 50px;
+            width: 600px;
+            position: absolute;
+            line-height: 50px;
+            left: 50%;
+            top: 40%;
+            margin-left: -300px;
+            margin-top: -25px;
+        }
+
+        div input {
+            width: 548px;
+            height: 25px;
+        }
+
+        button {
+            height: 31px;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <input type="text" name="re" id="txt">
+        <button id="btn">搜索</button>
+    </div>
+</body>
+<script>
+    var keyWords = ["小杨拉拉", "小杨加大很大打击", "小段大家都", "小超基督教大家", "贪玩蓝月好好玩", "贪吃蛇大作战",
+        "苹果国话", "苹果菜单和基督教"];
+    function my$(id) {
+        return document.getElementById(id);
+    }
+    my$("txt").onkeyup = function () {
+        //每一次键盘抬起判断有没有div
+        if (my$("dv")) {
+            my$("box").removeChild(my$("dv"));
+        }
+        var text = this.value;
+        var tempArr = [];
+        for (let i = 0; i < keyWords.length; i++) {
+            if (keyWords[i].indexOf(text) == 0) {
+                tempArr.push(keyWords[i]);
+            }
+        }
+
+        if (this.value.length == 0 || tempArr.length == 0) {
+            if (my$("dv")) {
+                my$("box").removeChild(my$("dv"));
+            }
+            return;
+        }
+        //遍历临时数组，创建div
+        var dvObj = document.createElement("div");
+        my$("box").appendChild(dvObj);
+        dvObj.id = "dv";
+        dvObj.style.width = "545px";
+        dvObj.style.border = "1px solid red";
+        for (let i = 0; i < tempArr.length; i++) {
+            var pObj = document.createElement("p");
+            dvObj.appendChild(pObj);
+            pObj.innerHTML = tempArr[i];
+            pObj.style.margin = 0;
+            pObj.style.padding = 0;
+            pObj.style.cursor = "pointer";
+            pObj.style.marginTop = "5px";
+
+        }
+    };
+    console.log(window.navigator.platform);
+    
+</script>
+
+</html>

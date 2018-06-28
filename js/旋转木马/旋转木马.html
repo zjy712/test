@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>旋转木马</title>
+</head>
+<link rel="stylesheet" href="../style/style.css">
+
+<body>
+    <div class="wrap" id="wrap">
+        <div class="slide" id="slide">
+            <ul>
+                <li>
+                    <a href="#">
+                        <img src="../images/whirligig_1.jpg    " alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="../images/whirligig_2.jpg    " alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="../images/whirligig_3.jpg    " alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="../images/whirligig_4.jpg    " alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="../images/whirligig_5.jpg    " alt="">
+                    </a>
+                </li>
+            </ul>
+            <div id="faceID">
+                <span id="left">
+                    <</span>
+                        <span id="right">></span>
+            </div>
+        </div>
+</body>
+<script src="../js/common.js"></script>
+<script>
+
+    var config = [
+        {
+            width: 600,
+            top: 20,
+            left: 50,
+            opacity: 0.5,
+            zIndex: 2
+        },
+        {
+            width: 800,
+            top: 90,
+            left: 20,
+            opacity: 0.8,
+            zIndex: 3
+        },
+        {
+            width: 1000,
+            top: 120,
+            left: 320,
+            opacity: 1,
+            zIndex: 4
+        },
+        {
+            width: 800,
+            top: 90,
+            left: 820,
+            opacity: 0.8,
+            zIndex: 3
+        },
+        {
+            width: 600,
+            top: 20,
+            left: 990,
+            opacity: 0.5,
+            zIndex: 2
+        }
+    ];
+    window.onload = function () {
+        var flag = true;
+        function assign() {
+            var list = my$("slide").getElementsByTagName("img");
+            for (let i = 0; i < list.length; i++) {
+                const element = list[i];
+                animate(element, config[i], function () {
+                    flag = true;
+                });
+            }
+        }
+        assign();
+        my$("slide").onmouseout = function () {
+            animate(my$("faceID"), { "opacity": 0 })
+        };
+        my$("slide").onmouseover = function () {
+            animate(my$("faceID"), { "opacity": 1 });
+        }
+        my$("right").onclick = function () {
+            if (flag) {
+                flag = false;
+                config.unshift(config.pop());
+                assign();
+            }
+
+        }
+        my$("left").onclick = function () {
+            if (flag) {
+                flag = false;
+                config.push(config.shift());
+                assign();
+            }
+
+        }
+    };
+</script>
+
+</html>

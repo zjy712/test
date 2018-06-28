@@ -1,0 +1,48 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.wrap{
+    margin: 50px auto;
+    height: 1000px;
+    
+}
+.slide {
+    height: 600px;
+    position: relative; 
+     height: 600px;
+    
+ width: 1640px;
+    margin: 0 auto;
+   
+}
+ul {
+    list-style: none;
+}
+img {
+    position: absolute;
+    
+}
+#faceID {
+    opacity : 0;
+    cursor: pointer;
+}
+#left, #right {
+            display: block;
+            position: absolute;
+            top: 50%;
+            margin-top: -30px;
+            width: 30px;height: 60px; 
+            background-color: #ccc;
+            text-align: center;
+            font-size: 20px;
+            line-height: 60px;
+            z-index: 4;
+            
+        }
+        #left {
+            left: 10px;
+        }
+        #right {
+            right: 10px;
+        }

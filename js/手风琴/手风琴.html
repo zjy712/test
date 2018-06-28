@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>手风琴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #box {
+            margin: 200px auto;
+            width: 1200px;
+            height: 462px;
+            border: 1px solid #ccc;
+        }
+
+        ul {
+            list-style: none;
+            width: 1200px;
+            height: 462px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* li {
+            width: 240px;
+            height: 462px;
+            background-size: 1228px 462px;
+            list-style: none;
+            float: left;
+        } */
+
+        /* li {
+            position: absolute;
+            background-size: 1228px 462px;
+            height: 462px;
+            width: 800px;
+        } */
+        
+        li {
+            position: absolute;
+            background-size: 1228px 462px;
+            height: 462px;
+            width: 800px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+</body>
+<script>
+    function my$(id) {
+        return document.getElementById(id);
+    }
+    function getStyle(element, attr) {
+        return window.getComputedStyle ?
+            window.getComputedStyle(element, null)[attr] :
+            element.currentStyle[attr];
+    }
+    function animate(element, json, fn) {
+        clearInterval(element.timeId);
+        var flag = true;
+        element.timeId = setInterval(function () {
+            var flag = true;
+            for (const attr in json) {
+                var current = parseInt(getStyle(element, attr));
+                var target = json[attr];
+                var step = (target - current) / 10;
+                step = step > 0 ? Math.ceil(step) : Math.floor(step);
+                current += step;
+                element.style[attr] = current + "px";
+                if (current != target) {
+
+                    flag = false;
+                    console.log("当前元素" + attr + "当前位置" + current + "目标位置" + target + "每次移动" + step);
+                }
+            }
+            if (flag) {
+                clearInterval(element.timeId);
+                if (fn) {
+                    fn();
+                }
+            }
+        }, 10);
+    };
+    
+    
+    
+    var list = my$("box").getElementsByTagName("li");
+    for (let i = 0; i < list.length; i++) {
+        const element = list[i];
+        element.index = i;
+
+        element.style.left = 240*(i) + "px";
+        element.style.backgroundImage = "url(../images/accordion_" + (i + 1) + ".jpg)";
+        element.onmousemove = mousemoveHandle;
+         element.onmouseout = mousemoutHandle;
+    }
+    list[0].style.left = 0 + "px";
+
+    function mousemoveHandle() {
+        for (let i = 0; i < list.length; i++) {
+            const ele = list[i];
+            if (i <= this.index) {
+                animate(ele, { "left": 100 * i });
+            } else
+                animate(ele, { "left": 800 + 100 * (i - 1) });
+        }
+    }
+        function mousemoutHandle() {
+            for (let i = 0; i < list.length; i++) {
+                const ele = list[i];
+                animate(ele, { "left": 240 * i});
+            }
+        }
+    
+</script>
+
+</html>

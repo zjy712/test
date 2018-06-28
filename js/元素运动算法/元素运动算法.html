@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+        }
+
+        img {
+            width: 200px;
+            height: 200px;
+        }
+
+
+
+        #box {
+            width: 200px;
+            height: 200px;
+            background-color: pink;
+            margin-top: 20px;
+            position: relative;
+  
+        }
+
+
+        #img {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="button" value="匀速滑动400m" id="btn1">
+    <input type="button" value="匀速滑动800m" id="btn2">
+    <input type="button" value="变速滑动400m" id="btn4">
+    <input type="button" value="变数滑动800m" id="btn5">
+    <input type="button" value="多元素回调函数" id="btn6">
+    <div id="box">
+
+    </div>
+</body>
+<script>
+    function my$(id) {
+        return document.getElementById(id);
+    }
+     my$("btn1").onclick = function () {
+            animate_1(my$("box"),"width",400);
+        };
+     my$("btn2").onclick = function () {
+             animate_1(my$("box"), "width", 800);
+        };
+
+    my$("btn4").onclick = function () {
+        animate(my$("box"), "width", 400);
+    };
+    my$("btn5").onclick = function () {
+        animate(my$("box"), "width", 800);
+    };
+
+
+
+    //获取样式
+    function getStyle(element, attr) {
+        return window.getComputedStyle ?
+            window.getComputedStyle(element, null)[attr] :
+            element.currentStyle[attr];
+    }
+    //匀速滑动
+    function animate_1(element, attr, target) {
+        clearInterval(element.timeId);
+        element.timeId = setInterval(function () {
+            var current = parseInt(getStyle(element, attr));
+            var step = 10;
+            step = current > target ? -step : step;
+            current += step;
+            if (Math.abs(target - current) > step) {
+                element.style[attr] = current + "px";
+         console.log("当前位置" + current + "目标位置" + target + "每次移动" + step);
+
+            } else {
+                clearInterval(element.timeId);
+                element.style[attr] = target + "px";
+            
+            }
+
+        }, 50);
+    };
+
+    //变速
+    function animate(element, attr, target) {
+        clearInterval(element.timeId);
+        element.timeId = setInterval(function () {
+            var current = parseInt(getStyle(element, attr));
+            var step = (target - current) / 10;
+            step = step > 0 ? Math.ceil(step) : Math.floor(step);
+            current += step;
+            element.style[attr] = current + "px";
+            if (current == target) {
+                clearInterval(element.timeId);
+            } else {
+                console.log("当前位置" + current + "目标位置" + target + "每次移动" + step);
+            }
+
+        }, 50);
+    };
+
+    //多元素动画
+
+    function animate_3(element, json) {
+        clearInterval(element.timeId);
+        element.timeId = setInterval(function () {
+            for (const attr in json) {
+                var current = parseInt(getStyle(element, attr));
+                var target = json[attr];
+                var step = (target - current) / 10;
+                step = step > 0 ? Math.ceil(step) : Math.floor(step);
+                current += step;
+                element.style[attr] = current + "px";
+                if (current == target) {
+                    clearInterval(element.timeId);
+                } else {
+                    console.log("当前元素" + attr + "当前位置" + current + "目标位置" + target + "每次移动" + step);
+                }
+            }
+        }, 20);
+    };
+
+    //回调函数
+    my$("btn6").onclick = function () {
+        var json1 = {
+            "width": 400,
+            "height": 400,
+            "opacity":0.3,
+        };
+        animate_5(my$("box"), json1, function () {
+            var json2 = {
+                "width": 200,
+                "height": 200,
+                "opacity":1,
+            };
+            animate_5(my$("box"), json2);
+        });
+
+    }
+    function animate_4(element, json, fn) {
+        
+        var flag = true;
+        element.timeId = setInterval(function () {
+            clearInterval(element.timeId);
+            for (const attr in json) {
+                var current = parseInt(getStyle(element, attr));
+                var target = json[attr];
+                var step = (target - current) / 10;
+                step = step > 0 ? Math.ceil(step) : Math.floor(step);
+                current += step;
+                element.style[attr] = current + "px";
+                if (current != target) {
+                    flag = false;
+                    console.log("当前元素" + attr + "当前位置" + current + "目标位置" + target + "每次移动" + step);
+                }
+            }
+            if (flag) {
+                if (fn) {
+                    fn();
+                }
+            }
+        }, 50);
+    };
+    //加入透明和层级
+    function animate_5(element, json, fn) {
+        clearInterval(element.timeId);
+        element.timeId = setInterval(function () {
+            var flag = true;
+            for (const attr in json) {
+                if (attr == "opacity") {
+                    //透明
+                    var current = parseInt(getStyle(element, attr) * 100);
+                    var target = json[attr] * 100;
+                    var step = (target - current) / 10;
+                    step = step > 0 ? Math.ceil(step) : Math.floor(step);
+                    current += step;
+
+                    element.style[attr] = (current / 100);
+                } else if (attr == "zIndex") {
+                    element.style[attr] = json[attr];
+                } else {
+
+                    var current = parseInt(getStyle(element, attr));
+                    var target = json[attr];
+                    var step = (target - current) / 10;
+                    step = step > 0 ? Math.ceil(step) : Math.floor(step);
+                    current += step;
+                    element.style[attr] = current + "px";
+                }
+                if (current != target) {
+                    flag = false;
+                    console.log("当前元素" + attr + "当前位置" + current + "目标位置" + target + "每次移动" + step);
+                }
+            }
+        if (flag) {
+                if (fn) {
+                    fn();
+                }
+            }   
+        }, 50);
+    };
+</script>
+
+</html>
