@@ -2,6 +2,26 @@
 
 > 存放练习代码，记录使用
 
+## HTML
+>主要是布局、仿站练习
+
+ ### [微信官网滑动门](https://github.com/zjy712/test/blob/master/html/滑动门/滑动门.html)
+    使用图片作为背景，使用背景图片的截取实现选中效果
+[运行demo](https://zjy712.github.io/test/html/滑动门/滑动门.html)
+
+ ### [仿京东](https://github.com/zjy712/test/blob/master/html/JD/JD.html)
+    仿京东布局练习。
+[运行demo](https://zjy712.github.io/test/html/JD/JD.html)
+
+ ### [仿传智博客练习](https://github.com/zjy712/test/blob/master/html/传智播客/index.html)
+    仿传智博客练习。
+[运行demo](https://zjy712.github.io/test/html/传智播客/index.html)
+
+ ### [携程移动端练习](https://github.com/zjy712/test/blob/master/html/携程/携程.html)
+    携程移动端练习
+[运行demo](https://zjy712.github.io/test/html/携程/携程.html)
+
+---
 ## JS
 > 部分题目来自百度前端学院
 
@@ -12,12 +32,12 @@
 ![image](https://github.com/zjy712/test/blob/master/js/js_5/js_5.gif) 
 
  ### [task_7](https://github.com/zjy712/test/blob/master/js/js_7/js_7.html)
-  实现树的前序遍历，中序遍历，后序遍历
- [运行demo](https://zjy712.github.io/test/js/js_7/js_7.html)
+     实现树的前序遍历，中序遍历，后序遍历
+[运行demo](https://zjy712.github.io/test/js/js_7/js_7.html)
  
  ### [task_8](https://github.com/zjy712/test/blob/master/js/js_8/js_8.html)
       实现树的深度优先遍历，广度优先遍历，深度优先查询，广度优先查询
- [运行demo](https://zjy712.github.io/test/js/js_8/js_8.html)
+[运行demo](https://zjy712.github.io/test/js/js_8/js_8.html)
 
  ### [相册](https://github.com/zjy712/test/blob/master/js/图册/图册.html)
     点击小图切换大图 大图下方显示当前照片名

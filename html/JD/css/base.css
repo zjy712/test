@@ -1,0 +1,61 @@
+/* 公共样式 */
+
+
+/* 版心 */
+
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot?298qsd');
+  src:  url('../fonts/icomoon.eot?298qsd#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?298qsd') format('truetype'),
+    url('../fonts/icomoon.woff?298qsd') format('woff'),
+    url('../fonts/icomoon.svg?298qsd#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.w {
+    width: 1190px;
+    margin: auto;
+}
+
+.fr {
+    float: right;
+}
+
+.fl {
+    float: left;
+}
+.jd_corle {
+    color: #f10215!important;
+}
+
+/* 顶部 */
+
+.J_event {
+    background-color: #2f2581;
+}
+
+.J_event a {
+    display: block;
+    height: 80px;
+    background: url(../images/J_event.jpg) no-repeat center;
+    position: relative;
+}
+
+.J_event a i {
+    font-style: normal;
+    font-family: "icomoon";
+    border-color: pink;
+    position: absolute;
+    color: #fff;
+    background: rgba(0, 0, 0, 4);
+    top: 10px;
+    right: 0;
+}
+
+.clearfloat:after{display:block;clear:both;content:"";visibility:hidden;height:0} 
+.clearfloat{zoom:1} 
+*{
+    margin: 0;
+}

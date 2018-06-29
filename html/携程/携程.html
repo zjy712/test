@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-width: 320px;
+            max-width: 540px;
+            background-color: palegoldenrod;
+            margin: 0 auto;
+            height: 400px;
+            font: normal 14px/1.5 Tahoma, "Lucida Grande", Verdana, "Microsoft Yahei", STXihei, hei;
+        }
+
+        header {
+            height: 107px;
+        }
+
+        header img {
+            height: 100%;
+            width: auto;
+        }
+
+        nav {
+            padding: 3px;
+            width: 100%;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .row {
+            height: 90px;
+            display: flex;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .row div {
+            height: 100%;
+            flex: 1;
+            background-color: #ff687a;
+            border-right: 1px solid #fff;
+
+        }
+
+        .row a {
+            display: block;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+        }
+
+        .row33 {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .row33 a {
+            flex: 1;
+            text-align: center;
+            line-height: 45px;
+        }
+
+        .row33 a:first-child {
+            border-bottom: 1px solid #fff;
+        }
+
+        .row div:last-child {
+            border-right: 0;
+        }
+
+        em {
+            font-style: normal;
+            line-height: 45px;
+            display: block;
+            text-align: center;
+        }
+
+        i {
+            font-style: normal;
+            line-height: 44px;
+            display: block;
+            text-align: center;
+        }
+        .col23 {
+            flex: 25%;
+        }
+        .aaa {
+            width: 100px;
+            height: 100px;
+          
+            opacity: 0.2;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="images/titlt.jpg" height="307" width="1536" alt="">
+    </header>
+    <nav>
+        <div class="row">
+            <div>
+                <a href="#">
+                    <em>酒店</em>
+                    <i>酒店</i>
+                </a>
+            </div>
+            <div class="row33">
+                <a href="#">1</a>
+                <a href="#">21</a>
+            </div>
+            <div class="row33">
+                <a href="#">1</a>
+                <a href="#">12</a>
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <a href="#">
+                    <em>酒店</em>
+                    <i>酒店</i>
+                </a>
+            </div>
+            <div class="row33">
+                <a href="#">1</a>
+                <a href="#">21</a>
+            </div>
+            <div class="row33">
+                <a href="#">1</a>
+                <a href="#">12</a>
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <a href="#">
+                    <em>酒店</em>
+                    <i>酒店</i>
+                </a>
+            </div>
+            <div class="row33">
+                <a href="#">1</a>
+                <a href="#">21</a>
+            </div>
+            <div class="row33">
+                <a href="#">1</a>
+                <a href="#">12</a>
+            </div>
+        </div>
+
+        <div class="ss">
+            <div class="row">
+                <div class="col23"></div>
+                <div class="col23"></div>
+                <div class="col23"></div>
+                <div class="col23"></div>
+            </div>
+            <div class="row">
+                <div class="col23"></div>
+                <div class="col23"></div>
+                <div class="col23"></div>
+                <div class="col23"></div>
+            </div>
+            <div class="row">
+                <div class="col23"></div>
+                <div class="col23"></div>
+                <div class="col23"></div>
+                <div class="col23"></div>
+            </div>
+        </div>
+    </nav>
+    <div class="aaa">
+        <div></div>
+        <p>sdsd</p>
+    </div>
+</body>
+
+</html>
