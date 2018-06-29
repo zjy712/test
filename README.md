@@ -9,7 +9,7 @@
 
      输入一个大于10小于100的数字，输出对应比例的条状图，同时实现左侧入，右侧入，排序功能。点击条状图当前条状图
      
-     [demo](http://htmlpreview.github.io/?https://github.com/zjy712/test/blob/master/js/js_5/js_5.html)
+ [demo](http://htmlpreview.github.io/?https://github.com/zjy712/test/blob/master/js/js_5/js_5.html)
 ![image](https://github.com/zjy712/test/blob/master/js/js_5/js_5.gif) 
 
  ### [task_7](https://github.com/zjy712/test/blob/master/js/js_7/js_7.html)
