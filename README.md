@@ -41,6 +41,7 @@
 
 ### [贪吃蛇](https://github.com/zjy712/test/tree/master/js/%E8%B4%AA%E5%90%83%E8%9B%87)
     js实现贪吃蛇游戏
+ [运行demo](https://zjy712.github.io/test/js/%E8%B4%AA%E5%90%83%E8%9B%87/%E8%B4%AA%E5%90%83%E8%9B%87.html)
  ![image](https://github.com/zjy712/test/blob/master/js/%E8%B4%AA%E5%90%83%E8%9B%87/GIF.gif)
  ### [相册](https://github.com/zjy712/test/blob/master/js/图册/图册.html)
     点击小图切换大图 大图下方显示当前照片名
