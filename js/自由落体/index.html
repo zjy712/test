@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>自由落体</title>
+</head>
+
+<body>
+    <div id="box" style="width:800px;height:920px;margin:  auto;">
+        <canvas id="canvas" width="800" height="920" style="border:1px solid #d3d3d3;">
+        </canvas>
+    </div>
+</body>
+<script>
+    window.onload = function () {
+        var ball = {
+            r: 50,
+            x: 0,
+            y: 0,
+            v: 0,
+            time: 0
+        }
+        var world = {
+            height: 920,
+            width: 800,
+            g: 9.8,
+            screen: 50,
+            dt: 0.05
+        }
+
+        ball.x = world.width / 2;
+        ball.y = ball.r;
+
+        var c = document.getElementById("canvas");
+        var ctx = c.getContext("2d");
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+        ctx.stroke();
+
+
+
+        function move(draw) {
+
+            ball.time += world.dt;
+            x = 0.5 * world.g * (ball.time * ball.time)
+            // ball.v = ball.v + world.dt * world.g * world.screen;
+            ball.y += x;
+            ball.v = world.g * ball.time;
+            ctx.clearRect(0, 0, 800, 920);
+            ctx.beginPath();
+            if (ball.y + ball.r >= world.height) {
+                ctx.arc(ball.x, world.height - ball.r, ball.r, 0, 2 * Math.PI);
+                ctx.closePath();
+                ctx.stroke();
+                clearInterval(draw)
+                return
+            }
+            ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        function drawing() {
+            ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+            ctx.stroke();
+            move()
+        }
+
+        function downmove() {
+            ball = {
+                r: 50,
+                x: 0,
+                y: 0,
+                v: 0,
+                time: 0
+            }
+            world = {
+                height: 920,
+                width: 800,
+                g: 9.8,
+                screen: 50,
+                dt: 0.05
+            }
+            var draw = setInterval(function () {
+                move(draw);
+            }, world.dt * 1000)
+        }
+        downmove()
+        // move()
+
+    }
+</script>
+
+</html>
