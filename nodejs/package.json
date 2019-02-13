@@ -1,0 +1,8 @@
+{
+    "name": "test",
+    "version": "0.0.1",
+    "dependencies": {
+        "mime": "^2.4.0"
+    },
+    "main": "index.js"
+}
