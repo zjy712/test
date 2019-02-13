@@ -1,3 +1,3 @@
 module.exports = {
-    mongoURI:""
+    mongoURI:"mongodb+srv://zhu:4720551647@test-blhc8.azure.mongodb.net/test?retryWrites=true"
 }
