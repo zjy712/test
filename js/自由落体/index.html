@@ -21,6 +21,7 @@
             x: 0,
             y: 0,
             v: 0,
+            to: 0,
             time: 0
         }
         var world = {
@@ -28,11 +29,12 @@
             width: 800,
             g: 9.8,
             screen: 50,
-            dt: 0.05
+            dt: 0.005
         }
 
         ball.x = world.width / 2;
         ball.y = ball.r;
+        ball.to = world;
 
         var c = document.getElementById("canvas");
         var ctx = c.getContext("2d");
@@ -42,53 +44,87 @@
 
 
 
-        function move(draw) {
+        function upmove(draw) {
+
+            if (parseInt(ball.v ) == 0) {
+                clearInterval(draw)
+                return
+            }
+
+            ball.time += world.dt;
+
+            x =  0.5 * ball.v * ball.time - 0.5 * world.g * (ball.time * ball.time);
+            ball.y -= x;
+            // ball.v = world.g * ball.time;
+
+            if (x <= 0 ) {
+                ctx.clearRect(0, 0, 800, 920);
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+                ctx.closePath();
+                ctx.stroke();
+                clearInterval(draw)
+
+                move1()
+            }
+
+            ctx.clearRect(0, 0, 800, 920);
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        function downmove(draw) {
 
             ball.time += world.dt;
             x = 0.5 * world.g * (ball.time * ball.time)
             // ball.v = ball.v + world.dt * world.g * world.screen;
             ball.y += x;
             ball.v = world.g * ball.time;
-            ctx.clearRect(0, 0, 800, 920);
-            ctx.beginPath();
+
             if (ball.y + ball.r >= world.height) {
+                ctx.clearRect(0, 0, 800, 920);
+                ctx.beginPath();
                 ctx.arc(ball.x, world.height - ball.r, ball.r, 0, 2 * Math.PI);
                 ctx.closePath();
                 ctx.stroke();
-                clearInterval(draw)
+                clearInterval(draw);
+                move2();
                 return
             }
+
+            ctx.clearRect(0, 0, 800, 920);
+            ctx.beginPath();
             ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.stroke();
+
+        }
+
+        function move1() {
+            ball.time = 0;
+            ball.v = 0;
+            var draw = setInterval(function () {
+                downmove(draw);
+            }, world.dt * 1000)
+        }
+        function move2() {
+            ball.time = 0;
+            var draw2 = setInterval(function() {
+                upmove(draw2);
+            },world.dt * 1000)
+        }
+
+        function drawing() {
+            ctx.clearRect(0, 0, 800, 920);
+            ctx.beginPath();
+            ctx.arc(ball.x, world.height - ball.r, ball.r, 0, 2 * Math.PI);
             ctx.closePath();
             ctx.stroke();
         }
 
-        function drawing() {
-            ctx.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI);
-            ctx.stroke();
-            move()
-        }
-
-        function downmove() {
-            ball = {
-                r: 50,
-                x: 0,
-                y: 0,
-                v: 0,
-                time: 0
-            }
-            world = {
-                height: 920,
-                width: 800,
-                g: 9.8,
-                screen: 50,
-                dt: 0.05
-            }
-            var draw = setInterval(function () {
-                move(draw);
-            }, world.dt * 1000)
-        }
-        downmove()
+        move1()
         // move()
 
     }
