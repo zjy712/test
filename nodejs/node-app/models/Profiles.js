@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ProfileSchema = new Schema({
+const ProfilesSchema = new Schema({
     type: {
         type: String,
     },
@@ -31,4 +31,4 @@ const ProfileSchema = new Schema({
     },
 })
 
-module.exports = Profile = mongoose.model("profile", ProfileSchema)
+module.exports = Profiles = mongoose.model("profile", ProfilesSchema)

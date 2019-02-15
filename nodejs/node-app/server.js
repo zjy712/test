@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport')
 // 引入users.js
 const users = require('./routes/api/users');
-
+const profiles = require('./routes/api/profiles')
 // DB config
 const db = require('./config/keys').mongoURI;
 
@@ -20,11 +20,12 @@ app.use(bodyParser.json())
 
 // passport 初始化
 app.use(passport.initialize());
-require('./config/passport')(passport)
+require('./config/passport')(passport);
 
 
 // 使用routes
-app.use('/api/users',users)
+app.use('/api/users',users);
+app.use('/api/profiles', profiles)
 
 
 app.get('/',(req,res) => {

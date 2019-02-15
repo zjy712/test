@@ -4,9 +4,10 @@ const router = express.Router();
 const User = require('../../models/User');
 const bcrypt = require('bcrypt')
 const gravatar = require('gravatar')
-const keys = require('../../config/keys')
-const jwt = require('jsonwebtoken');
 
+const keys = require('../../config/keys')
+
+const jwt = require('jsonwebtoken');
 const passport = require('passport')
 
 
