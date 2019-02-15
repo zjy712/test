@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
+const passport = require('passport')
 // 引入users.js
 const users = require('./routes/api/users');
 
@@ -16,6 +17,11 @@ mongoose.connect(db)
 // body-parser 中间件
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json())
+
+// passport 初始化
+app.use(passport.initialize());
+require('./config/passport')(passport)
+
 
 // 使用routes
 app.use('/api/users',users)
