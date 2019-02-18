@@ -1,2 +1,24 @@
 nodejs/node-app/package-lock.json
 nodejs/node-app/node_modules
+nodejs/node-app/client/package-lock.json
+nodejs/node-app/client/.DS_Store
+nodejs/node-app/client/node_modules
+nodejs/node-app/client/dist
+
+# local env files
+nodejs/node-app/client/.env.local
+nodejs/node-app/client/.env.*.local
+
+# Log files
+nodejs/node-app/client/npm-debug.log*
+nodejs/node-app/client/yarn-debug.log*
+nodejs/node-app/client/yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*

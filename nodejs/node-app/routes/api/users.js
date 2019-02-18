@@ -1,4 +1,4 @@
-// login & reqister
+// login & register
 const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
@@ -18,10 +18,10 @@ router.get('/test', (req, res) => {
     res.json({ msg: "login works" })
 })
 
-// $route POST api/users/reqister
+// $route POST api/users/register
 // @desc  返回json
 // @access public
-router.post('/reqister', (req, res) => {
+router.post('/register', (req, res) => {
     // console.log(req.body);
 
     User.findOne({ email: req.body.email })

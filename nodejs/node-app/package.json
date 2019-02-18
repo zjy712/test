@@ -4,7 +4,7 @@
   "description": "restful api",
   "main": "server.js",
   "scripts": {
-    "client-install": "npm intsall --prefix client",
+    "client-install": "npm install --prefix client",
     "client": "npm start --prefix client",
     "server": "nodemon server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\""
