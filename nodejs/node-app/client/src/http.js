@@ -1,5 +1,6 @@
 import axios from "axios";
-import { Message,Loading } from 'element-ui';
+import { Message, Loading, MessageBox } from 'element-ui';
+import router from './router'
 
 let loading;
 function startLoading() {
@@ -12,13 +13,30 @@ function startLoading() {
 function endLoading() {
     loading.close()
 }
-// 请求拦截
 
+function resdiglog(data) {
+    switch (data.code) {
+        case 0:
+
+            break;
+        case 11:
+        Message.error(data.mgs);
+            break;
+        default:
+            break;
+    }
+}
+
+// 请求拦截
 axios.interceptors.request.use(config => {
     // 加载动画
     startLoading();
+    if (localStorage.Token) {
+        // 配置请求头
+        config.headers.Authorization = localStorage.Token;
+    }
     return config;
-},err => {
+}, err => {
     return Promise.reject(err);
 })
 
@@ -26,9 +44,22 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(response => {
     endLoading();
     return response;
+    // console.log(response);
+    // return resdiglog(response.data);
 }, err => {
-        endLoading();
-        Message.error(err.response.data)
+    endLoading();
+    Message.error(err.response.data)
+    // 获取错误状态码
+    const { status } = err.response;
+    if (status == 401) {
+        Message.error('Token失效,请重新登陆');
+        localStorage.removeItem('Token')
+        router.push('./login')
+    }
+    if (status == 400) {
+        // resdiglog(response.data)
+        Message.error(err.response.data.mgs);
+    }
     return Promise.reject(err);
 })
 

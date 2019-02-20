@@ -3,8 +3,8 @@
     <el-form-item label="用户名" prop="name">
       <el-input v-model="register.name"></el-input>
     </el-form-item>
-    <el-form-item label="密码" prop="pass">
-      <el-input type="password" v-model="register.pass" autocomplete="off"></el-input>
+    <el-form-item label="密码" prop="password">
+      <el-input type="password" v-model="register.password" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="email" prop="email">
       <el-input v-model="register.email"></el-input>
@@ -28,7 +28,7 @@ export default {
     return {
       register: {
         name: "",
-        pass: "",
+        password: "",
         email: "",
         identity: ""
       }
@@ -38,12 +38,17 @@ export default {
     submitForm() {
       this.$axios.post("api/users/register", this.register).then(res => {
         // 注册成功
+         console.log(res);
         this.$message({
-          $message: "账号注册成功",
+          message: "账号注册成功",
           type: "success"
         });
-        this.$router.push('/index')
-      });
+        this.$router.push('/login')
+      })
+      .catch(err => {
+        console.log(err);
+        
+      })
     }
   }
 };

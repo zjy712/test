@@ -22,7 +22,7 @@ router.get('/test', (req, res) => {
 // @desc  返回json
 // @access public
 router.post('/register', (req, res) => {
-    // console.log(req.body);
+    console.log(req.body);
 
     User.findOne({ email: req.body.email })
         .then((user) => {
@@ -64,7 +64,7 @@ router.post('/login', (req, res) => {
     User.findOne({ email })
         .then(user => {
             if (!user) {
-                return res.status(404).json({ mgs: '用户不存在' })
+                return res.status(400).json({ mgs: '用户不存在' })
             }
             bcrypt.compare(password, user.password)
                 .then(isMatch => {
@@ -82,7 +82,7 @@ router.post('/login', (req, res) => {
                             })
                         })
                     } else {
-                        return res.status(404).json({ mgs: '密码错误' })
+                        return res.status(400).json({ mgs: '密码错误' })
                     }
 
                 })
