@@ -6,6 +6,7 @@ const passport = require('passport')
 // 引入users.js
 const users = require('./routes/api/users');
 const profiles = require('./routes/api/profiles')
+const movieinfo = require('./routes/api/movieinfo')
 // DB config
 const db = require('./config/keys').mongoURI;
 
@@ -26,7 +27,7 @@ require('./config/passport')(passport);
 // 使用routes
 app.use('/api/users',users);
 app.use('/api/profiles', profiles)
-
+app.use('/api/movieinfo',movieinfo)
 
 app.get('/',(req,res) => {
     res.end('hello world!')

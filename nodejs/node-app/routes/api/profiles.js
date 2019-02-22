@@ -63,7 +63,7 @@ router.post('/add', (req, res) => {
         remark: req.body.remark,
     };
     new Profiles(newProfiles).save()
-        .then(profiles => res.json({ mgs: 'success' }))
+        .then(profiles => res.json({ msg: 'success' }))
 })
 
 // $route POST api/profiles/edit

@@ -22,3 +22,4 @@ nodejs/node-app/client/yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+nodejs/node-app/package-lock.json

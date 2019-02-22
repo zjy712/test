@@ -20,7 +20,7 @@ function resdiglog(data) {
 
             break;
         case 11:
-        Message.error(data.mgs);
+        Message.error(data.msg);
             break;
         default:
             break;
@@ -58,7 +58,7 @@ axios.interceptors.response.use(response => {
     }
     if (status == 400) {
         // resdiglog(response.data)
-        Message.error(err.response.data.mgs);
+        Message.error(err.response.data.msg);
     }
     return Promise.reject(err);
 })

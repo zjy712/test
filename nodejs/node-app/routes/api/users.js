@@ -64,7 +64,7 @@ router.post('/login', (req, res) => {
     User.findOne({ email })
         .then(user => {
             if (!user) {
-                return res.status(400).json({ mgs: '用户不存在' })
+                return res.status(400).json({ msg: '用户不存在' })
             }
             bcrypt.compare(password, user.password)
                 .then(isMatch => {
@@ -82,7 +82,7 @@ router.post('/login', (req, res) => {
                             })
                         })
                     } else {
-                        return res.status(400).json({ mgs: '密码错误' })
+                        return res.status(400).json({ msg: '密码错误' })
                     }
 
                 })
