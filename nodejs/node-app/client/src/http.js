@@ -48,7 +48,10 @@ axios.interceptors.response.use(response => {
     // return resdiglog(response.data);
 }, err => {
     endLoading();
-    Message.error(err.response.data)
+    debugger
+    Message.error('出错');
+    console.log(err.response.data);
+    
     // 获取错误状态码
     const { status } = err.response;
     if (status == 401) {

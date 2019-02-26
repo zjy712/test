@@ -43,7 +43,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
                 // 查询豆瓣api
                 request(options, (err, res1, body) => {
                     var info = JSON.parse(body);
-                    if (body.code != 5000) {
+                    if (info.code != 5000) {
                         const newmovieinfo = new Movieinfo({
                             id: info.id,
                             title: info.title,
@@ -59,7 +59,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
                         })
                         // 储存到本地服务器
                         newmovieinfo.save()
-                            .then(movieinfo => res.json(movieinfo))
+                            .then(movieinfo => res.json({code:0,data:movieinfo}))
                             .catch(err => console.log(err))
                     } else {
                         res.json({ code: 11, msg: '不存在此电影' })
@@ -145,4 +145,6 @@ router.post('/delete/:id', passport.authenticate("jwt", { session: false }), (re
         })
         .catch(err => res.status(404).json('删除失败！'))
 })
+
+
 module.exports = router
