@@ -69,7 +69,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
 
             } else {
                 Movieinfo.findOneAndUpdate({ id: id }, { $inc: { reviews_count: 1 } }, { new: true })
-                    .then(movieinfo => res.json({ code: 0, data: { movieinfo } }))
+                    .then(movieinfo => res.json({ code: 0, data: movieinfo  }))
             }
         })
         .catch(err => {

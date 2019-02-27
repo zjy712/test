@@ -28,7 +28,12 @@ const router = new Router({
       component: () => import('./views/Login.vue')
     },
     {
-      path: '/*',
+      path: '/movieinfo/:id',
+      name: 'movieinfo',
+      component: () => import('./views/movieinfo.vue')
+    },
+    {
+      path: '*',
       name: 'Notfound',
       component: () => import('./views/404.vue')
     }
