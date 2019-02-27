@@ -45,7 +45,7 @@ const router = new Router({
 
 router.beforeEach((to,from,next) => {
   const isLogin = localStorage.Token ? true : false;
-  if (to.path == '/login' || to.path == 'register') {
+  if (to.path == '/login' || to.path == '/register') {
     next();
   } else {
     isLogin ? next() : next('/login')

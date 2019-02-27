@@ -1,4 +1,4 @@
 module.exports = {
-    mongoURI:"mongodb+srv://zhu:4720551647@test-blhc8.azure.mongodb.net/test?retryWrites=true",
+    mongoURI:"mongodb://47.94.194.153:27017",
     secretOrkey: "secret"
 }
