@@ -55,6 +55,8 @@ export default {
         const { token } = res.data;
         // 解析token
         const decoded = jwt_decode(token);
+        console.log(decoded);
+        
         localStorage.setItem("Token", token);
         this.$message({
           message: "登陆成功",

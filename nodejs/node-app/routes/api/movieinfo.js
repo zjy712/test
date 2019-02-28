@@ -34,11 +34,11 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
             if (!movieinfo) {
                 // return res.status(404).json({ msg: '无内容' })
                 var options = {
-                    url: 'https://api.douban.com/v2/movie/subject/' + id,
-                    // headers:{
-                    //     'Content-Type' :'text/json; charset=utf-8',
-                    //     'Transfer-Encoding':'chunked'
-                    // }
+                    url: 'https://douban.uieee.com/v2/movie/subject/' + id,
+                    headers:{
+                        'Content-Type':'application/xml; charset=utf-8',
+                        'Transfer-Encoding':'chunked'
+                    }
                 }
                 // 查询豆瓣api
                 request(options, (err, res1, body) => {

@@ -1,29 +1,49 @@
 <template>
   <div id="moveinfo">
-    <div class="titleBar">
-      <div class="rating">
-        <div class="average">
-          <div class="ratingValue">
-            <strong title="7.6 based on 53,695 user ratings">
-              <span itemprop="ratingValue">{{info.rating.average}}</span>
-            </strong>
-            <span class="grey">/</span>
-            <span class="grey" itemprop="bestRating">10</span>
-          </div>
-          <span class="small" itemprop="ratingCount">53,695</span>
-        </div>
-      </div>
-      <div>
-        <h1>
-          {{info.title}}
-          <span class="year">({{info.year}})</span>
-        </h1>
-      </div>
-    </div>
     <div class="slate_wrapper">
-        <div class="poster">
-            <img :src="info.images[0].large" alt="" srcset="">
+      <div class="poster">
+        <img :src="'https://images.weserv.nl/?url='+(info.images[0].large.slice(7))" alt srcset>
+      </div>
+      <div class="titleBar">
+        <div class="rating">
+          <div class="average">
+            <div class="ratingValue">
+              <strong title="7.6 based on 53,695 user ratings">
+                <span itemprop="ratingValue">{{info.rating.average}}</span>
+              </strong>
+              <span class="grey">/</span>
+              <span class="grey" itemprop="bestRating">10</span>
+            </div>
+            <span class="small" itemprop="ratingCount">53,695</span>
+          </div>
         </div>
+        <div>
+          <h1>
+            {{info.title}}
+            <span class="year">({{info.year}})</span>
+            
+          </h1>
+        </div>
+        <div>
+        <span class="aka">{{info.aka}}</span>
+        <div style="margin-left:45px;display: inline-block;">
+        <span v-for="(item, index) in info.genres" :key="index">{{item +' '}}</span>
+        </div>
+        <div style="margin-left:45px;display: inline-block;">
+        <span v-for="(item, index) in info.countries" :key="index">{{item +' '}}</span>
+        </div>
+        </div>
+        
+        <div class="info">
+          <div style="    display: flex;">
+            <span>导演：</span>
+            <div class="" style="margin-left: 10px;">
+              <img :src="'https://images.weserv.nl/?url='+(info.directors[0].avatars.small.slice(7))" style="height: 133px;border-radius: 10px;" alt="" srcset="">
+              <span style="display: block;text-align: center;">{{info.directors[0].name}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -53,7 +73,24 @@ export default {
 </script>
 
 <style scoped>
+.slate_wrapper {
+  display: flex;
+  margin-top: 15px;
+}
+.poster img {
+  border: 1px solid #d5d5d5;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #999;
+}
+.aka {
+  margin-top: 8px;
+  margin-left: 0;
+}
+.info {
+  margin-top: 10px;
+}
 .titleBar {
+  width: 100%;
   padding: 0 20px;
 }
 .titleBar h1 {
@@ -65,7 +102,6 @@ export default {
   padding-bottom: 3px;
 }
 .year {
-  color: silver;
   font-family: Arial;
   font-size: 25px;
   line-height: 100%;
@@ -89,23 +125,23 @@ export default {
   width: 58px;
 }
 .ratingValue {
-    margin-bottom: -2px;
-    white-space: nowrap;
+  margin-bottom: -2px;
+  white-space: nowrap;
 }
 .grey {
-    color: #6b6b6b;
-    font-size: 10px;
+  color: #6b6b6b;
+  font-size: 10px;
 }
 .ratings_wrapper .imdbRating .small {
-    font-size: 10px;
+  font-size: 10px;
 }
 .ratingValue strong {
-    font-size: 24px;
-    font-weight: normal;
-    font-family: Arial;
-    line-height: 24px;
+  font-size: 24px;
+  font-weight: normal;
+  font-family: Arial;
+  line-height: 24px;
 }
 .small {
-    font-size: 10px;
+  font-size: 10px;
 }
 </style>
