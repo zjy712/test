@@ -2,7 +2,7 @@
   <div id="moveinfo">
     <div class="slate_wrapper">
       <div class="poster">
-        <img :src="'https://images.weserv.nl/?url='+(info.images[0].large.slice(7))" alt srcset>
+        <img :src="'https://images.weserv.nl/?url='+(info.images.large.slice(7))" alt srcset>
       </div>
       <div class="titleBar">
         <div class="rating">
@@ -21,29 +21,93 @@
           <h1>
             {{info.title}}
             <span class="year">({{info.year}})</span>
-            
           </h1>
         </div>
         <div>
-        <span class="aka">{{info.aka}}</span>
-        <div style="margin-left:45px;display: inline-block;">
-        <span v-for="(item, index) in info.genres" :key="index">{{item +' '}}</span>
+          <span
+            class="aka"
+          >{{ (info.countries.indexOf('中国大陆')>-1 || info.countries.indexOf('香港')>-1 || info.countries.indexOf('台湾')>-1) ? info.aka.split(',')[info.aka.split(',').length-1] :info.original_title}}</span>
+          <!-- <div style="margin-left:45px;display: inline-block;">
+            <span v-for="(item, index) in info.genres" :key="index">{{item +' '}}</span>
+          </div>
+          <div style="margin-left:45px;display: inline-block;">
+            <span v-for="(item, index) in info.countries" :key="index">{{item +' '}}</span>
+          </div> -->
         </div>
-        <div style="margin-left:45px;display: inline-block;">
-        <span v-for="(item, index) in info.countries" :key="index">{{item +' '}}</span>
-        </div>
-        </div>
-        
-        <div class="info">
-          <div style="    display: flex;">
-            <span>导演：</span>
-            <div class="" style="margin-left: 10px;">
-              <img :src="'https://images.weserv.nl/?url='+(info.directors[0].avatars.small.slice(7))" style="height: 133px;border-radius: 10px;" alt="" srcset="">
-              <span style="display: block;text-align: center;">{{info.directors[0].name}}</span>
+
+        <div class="center">
+          <div class="centre_left">
+                      <div class="info">
+            <div style="    display: flex;">
+              <span>导演：</span>
+              <div class style="margin-left: 10px;">
+                <img
+                  :src="'https://images.weserv.nl/?url='+(info.directors[0].avatars.small.slice(7))"
+                  style="height: 133px;border-radius: 10px;"
+                  alt
+                  srcset
+                >
+                <span style="display: block;text-align: center;">{{info.directors[0].name}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="info">
+            <div style="    display: flex;">
+              <span>类型：</span>
+              <div class style="margin-left: 10px;">
+                <span v-for="(item, index) in info.genres" :key="index">{{item +' '}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="info">
+            <div style="    display: flex;">
+              <span>制作国家：</span>
+              <div class style="margin-left: 10px;">
+                <span v-for="(item, index) in info.countries" :key="index">{{item +' '}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="info">
+            <div style="    display: flex;">
+              <span>又名：</span>
+              <div class style="margin-left: 10px;">
+                <span>{{info.aka}}</span>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="center_right" >
+            <div class="info">
+              <div style="display: flex;">
+                <span>主演：</span>
+                <div class="casts">
+                  <div
+                  v-for="(item, index) in info.casts"
+                  :key="index"
+                  class="cast"
+                  style="margin-left: 10px;"
+                >
+                  <img
+                    :src="'https://images.weserv.nl/?url='+(item.avatars.small.slice(7))"
+                    style="height: 75px;border-radius: 10px; margin-bottom: 10px "
+                    alt
+                    srcset
+                  >
+                  <span style="display: block;text-align: center;    margin: auto 25px;; ">{{item.name}}</span>
+                </div>
+                </div>
+                
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="summary">
+      <div class="summary_title"> {{info.title}}的故事梗概 </div>
+      <p class="summary_com">
+        {{info.summary}}
+      </p>
     </div>
   </div>
 </template>
@@ -82,9 +146,20 @@ export default {
   border-radius: 10px;
   box-shadow: 0 0 10px #999;
 }
+.centre_left {
+  width: 400px;
+}
+.center {
+  display: flex;
+}
 .aka {
   margin-top: 8px;
   margin-left: 0;
+  font-style: italic
+}
+.cast{
+  display: flex;
+  
 }
 .info {
   margin-top: 10px;

@@ -43,6 +43,10 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
                 // 查询豆瓣api
                 request(options, (err, res1, body) => {
                     var info = JSON.parse(body);
+                    if (info.code == 112) {
+                        res.json({ code: 11, msg: '超出API请求速率' })
+                        return
+                    }
                     if (info.code != 5000) {
                         const newmovieinfo = new Movieinfo({
                             id: info.id,
@@ -50,6 +54,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
                             aka: info.aka,
                             year: info.year,
                             countries: info.countries,
+                            original_title: info.original_title,
                             genres: info.genres,
                             directors: info.directors,
                             casts: info.casts,

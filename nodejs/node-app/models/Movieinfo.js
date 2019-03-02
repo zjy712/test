@@ -25,11 +25,9 @@ const MovieinfoSchema = new Schema({
     year: {
         type: String,
     },
-    images: [{
-        small: String,
-        large: String,
-        medim: String
-    }],
+    images: {
+        type: Object,
+    },
     id: {
         type: String,
     },
@@ -38,6 +36,9 @@ const MovieinfoSchema = new Schema({
     },
     aka: {
         type: String,
+    },
+    original_title:{
+        type: String
     },
     countries: [
         String
