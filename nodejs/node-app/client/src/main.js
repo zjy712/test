@@ -4,9 +4,19 @@ import router from './router'
 import store from './store'
 import axios from "./http";
 
+import   '../src/css/main.css'
+
+
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
+// import { Skeleton, Comment } from 'ant-design-vue';
+import antd from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css'
+
+// Vue.component(Skeleton.name, Skeleton,Comment.name, Comment);
+
+Vue.use(antd);
 Vue.use(ElementUI);
 
 Vue.config.productionTip = false

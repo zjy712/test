@@ -3,13 +3,44 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
 const bcrypt = require('bcrypt')
-const gravatar = require('gravatar')
+// const gravatar = require('gravatar')
+
+const fs = require('fs')
+const multer = require('multer');
+const avatarUpload = multer({ dest: 'public/tem_avatar/' });
 
 const keys = require('../../config/keys')
 
 const jwt = require('jsonwebtoken');
 const passport = require('passport')
 
+router.post(
+    '/addavatar',
+    avatarUpload.single('avatar'),
+    (req, res) => {
+        // Set { new: true } to return the updated one, rather than the original one.
+        // const email = req.body.email;
+        // fs.rename(email,)
+        console.log(req.file);
+        fs.rename(req.file.path,'public/avatar/'+req.file.originalname,function (err) {
+            if (err) {
+                throw err
+            }
+            console.log("上传成功");
+            
+        })
+        // res.writeHead(200,{
+        //     "Access-Control-Allow-Origin": "*"
+        // })
+        // res.end(JSON.stringify(req.file) + JSON.stringify(req.body));
+        // var data = JSON.parse(req.file)
+        var url = 'http://localhost:5000/avatar/' + req.file.originalname
+        res.json({ code: 11, data: {url:url}})
+        // User.findByIdAndUpdate(email, { avatar: req.file.path }, { new: true }).then(user => {
+        //     res.json({ message: "ok" });
+        // });
+    }
+);
 
 // $route GET api/users/test
 // @desc  返回json
@@ -29,11 +60,11 @@ router.post('/register', (req, res) => {
             if (user) {
                 return res.status(400).json({ email: '邮箱已被注册' })
             } else {
-                var avatar = gravatar.url(req.body.email, { s: '200', r: 'pg', d: 'mm' });
+                // var avatar = gravatar.url(req.body.email, { s: '200', r: 'pg', d: 'mm' });
                 const newUser = new User({
                     name: req.body.name,
                     email: req.body.email,
-                    avatar,
+                    avatar: req.body.avatar,
                     password: req.body.password,
                     identity: req.body.identity
                 })
@@ -100,4 +131,7 @@ router.get('/current', passport.authenticate("jwt", { session: false }), (req, r
         identity: req.user.identity,
     });
 })
+
+
+
 module.exports = router
