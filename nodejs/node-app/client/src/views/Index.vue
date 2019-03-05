@@ -1,5 +1,7 @@
 <template>
   <div>
+    <Header :user_avatar="userinfo.avatar"></Header>
+    <div id="main">
     <h1>index</h1>
     <el-row>
       <el-button>默认按钮</el-button>
@@ -10,13 +12,21 @@
       <el-button type="danger">危险按钮</el-button>
     </el-row>
   </div>
+  </div>
 </template>
 
 <script>
 import jwt_decode from "jwt-decode";
+import Header from '@/components/Header.vue'
+
 export default {
+  components:{
+    Header
+  },
   data() {
-    return {};
+    return {
+      userinfo:null,
+    };
   },
   methods: {
     token() {
@@ -26,8 +36,16 @@ export default {
     }
   },
   created() {
-      this.token();
+    this.userinfo = this.$store.state.Userinfo;
   },
 
 };
 </script>
+
+<style scoped>
+#main {
+  width: 1008px;
+  margin: 0 auto;
+  padding: 0;
+}
+</style>

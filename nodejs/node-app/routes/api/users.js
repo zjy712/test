@@ -106,10 +106,17 @@ router.post('/login', (req, res) => {
                             name: user.name,
                             identity: user.identity
                         }
+                        const data = {
+                            name:user.name,
+                            email:user.email,
+                            avatar:user.avatar,
+                            data:user.data
+                        }
                         jwt.sign(rule, keys.secretOrkey, { expiresIn: 3600 }, (err, token) => {
                             res.json({
                                 success: true,
-                                token: "Bearer " + token
+                                token: "Bearer " + token,
+                                data
                             })
                         })
                     } else {

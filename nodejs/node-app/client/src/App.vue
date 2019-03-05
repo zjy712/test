@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    
     <div id="root">
       <router-view/>
     </div>
@@ -12,8 +13,12 @@ body {
   padding: 0;
 }
 #root {
-  width: 1008px;
-  margin: 0 auto;
-  padding: 0;
+  
 }
 </style>
+
+<script>
+export default {
+
+}
+</script>
