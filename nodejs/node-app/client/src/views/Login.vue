@@ -62,7 +62,8 @@ export default {
           type: "success"
         });
         this.$store.commit("setUserinfo",res.data.data);
-        this.$router.push("/index");
+        window.localStorage.setItem('setUserinfo', JSON.stringify(res.data.data) );
+        this.$router.push("/home");
       });
     }
   }

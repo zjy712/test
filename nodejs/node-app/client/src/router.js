@@ -10,12 +10,21 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      redirect:'/index'
+      redirect: '/home'
     },
     {
-      path: '/index',
-      name: 'index',
-      component: Index
+      path: '/home',
+      name: 'home',
+      component: Index,
+      children: [
+
+        {
+          path: '/movieinfo/:id',
+          name: 'movieinfo',
+          component: () => import('./views/movieinfo.vue')
+        },
+
+      ]
     },
     {
       path: '/register',
@@ -28,11 +37,6 @@ const router = new Router({
       component: () => import('./views/Login.vue')
     },
     {
-      path: '/movieinfo/:id',
-      name: 'movieinfo',
-      component: () => import('./views/movieinfo.vue')
-    },
-    {
       path: '*',
       name: 'Notfound',
       component: () => import('./views/404.vue')
@@ -43,7 +47,7 @@ const router = new Router({
 
 // 路由守卫
 
-router.beforeEach((to,from,next) => {
+router.beforeEach((to, from, next) => {
   const isLogin = localStorage.Token ? true : false;
   if (to.path == '/login' || to.path == '/register') {
     next();

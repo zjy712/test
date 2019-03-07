@@ -127,15 +127,15 @@
             <a-comment>
               <a-avatar
                 slot="avatar"
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                :src="userinfo.avatar"
                 alt="Han Solo"
               />
               <div slot="content">
                 <a-form-item>
-                  <a-textarea :rows="4"></a-textarea>
+                  <a-textarea v-model="new_paragraph.content" :rows="4"></a-textarea>
                 </a-form-item>
                 <a-form-item>
-                  <a-button htmlType="submit" type="primary">Add Comment</a-button>
+                  <a-button htmlType="submit" type="primary" @click="postNewParagraph">提交</a-button>
                 </a-form-item>
               </div>
             </a-comment>
@@ -150,7 +150,7 @@
               <a-list-item slot="renderItem" slot-scope="item, index">
                 <a-comment :author="item.author" :avatar="item.avatar">
                   <template slot="actions">
-                    <span v-for="action in item.actions">{{action}}</span>
+                    <!-- <span v-for="action in item.actions">{{action}}</span> -->
                     <div class="paragraph_add" v-if="isparagraph_add">
                     <a-comment>
                       <a-avatar
@@ -187,10 +187,15 @@
 
 <script>
 import moment from 'moment'
+import qs from 'qs'
+
 export default {
   data() {
     return {
-      id: this.$route.params.id,
+      userinfo:{
+        avatar:''
+      },
+      movie_id: this.$route.params.id,
       info: {
         images: {
           large: ""
@@ -198,10 +203,16 @@ export default {
         rating: {
           average: []
         },
-        countries: []
+        countries: [],
+        cats:[],
+        directors:[{avatars:{small:''},name:''}]
       },
       loading: true,
       isparagraph_add: false,
+
+      new_paragraph:{
+        content:''
+      },
       data: [
         {
           actions: ['Reply to'],
@@ -223,7 +234,7 @@ export default {
   },
   methods: {
     getinfo() {
-      this.$axios.get("/api/movieinfo/" + this.id).then(res => {
+      this.$axios.get("/api/movieinfo/" + this.movie_id).then(res => {
         console.log(res.data);
         this.info = res.data.data;
 
@@ -234,11 +245,24 @@ export default {
     },
     paragraph() {
       this.isparagraph_add = !this.isparagraph_add;
+    },
+    postNewParagraph(){
+      this.new_paragraph.movie_id = this.movie_id;
+this.new_paragraph.user_avatar = this.userinfo.avatar;
+      this.new_paragraph.user_email = this.userinfo.email;
+      
+
+      this.$axios.post("/api/paragraph/add" , qs.stringify(this.new_paragraph)).then(res =>{
+          console.log(res);
+          
+      })
     }
   },
   created() {
     this.getinfo();
-  }
+    this.userinfo = this.$store.state.Userinfo || JSON.parse(localStorage.getItem("setUserinfo")) ;
+    
+  },
 };
 </script>
 

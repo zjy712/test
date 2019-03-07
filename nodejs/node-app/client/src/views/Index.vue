@@ -1,7 +1,11 @@
 <template>
   <div>
-    <Header :user_avatar="userinfo.avatar"></Header>
+    <Header></Header>
     <div id="main">
+      <router-view></router-view>
+    </div>
+    
+    <!-- <div id="main">
     <h1>index</h1>
     <el-row>
       <el-button>默认按钮</el-button>
@@ -11,7 +15,7 @@
       <el-button type="warning">警告按钮</el-button>
       <el-button type="danger">危险按钮</el-button>
     </el-row>
-  </div>
+  </div> -->
   </div>
 </template>
 
@@ -35,9 +39,7 @@ export default {
       console.log(decoded);
     }
   },
-  created() {
-    this.userinfo = this.$store.state.Userinfo;
-  },
+  
 
 };
 </script>

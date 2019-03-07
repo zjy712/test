@@ -2,6 +2,7 @@
   <div id="app">
     
     <div id="root">
+      <!-- <Header  :user_avatar="userinfo.avatar"></Header> -->
       <router-view/>
     </div>
   </div>

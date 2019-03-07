@@ -11,7 +11,7 @@
                 <div class="popover">
                     <i class="el-icon-bell"></i></div>
                 <div class="header_profile">
-                    <img :src="user_avatar" width="30px" alt="">
+                    <img :src="userinfo.avatar" width="30px" alt="">
                 </div>
 
             </div>
@@ -75,10 +75,16 @@
 
 <script>
 export default {
-    props:{
-        user_avatar:{
-            type:String
+    data() {
+        return {
+            userinfo:{
+                avatar:''
+            }
         }
-    }
+    },
+    created() {
+    this.userinfo = this.$store.state.Userinfo || JSON.parse(localStorage.getItem("setUserinfo")) ;
+    
+  },
 }
 </script>
