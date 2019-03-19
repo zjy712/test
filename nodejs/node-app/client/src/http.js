@@ -34,7 +34,7 @@ axios.interceptors.request.use(config => {
     if (localStorage.Token) {
         // 配置请求头
         config.headers.Authorization = localStorage.Token;
-        config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        // config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
     }
     return config;
 }, err => {

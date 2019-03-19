@@ -4,7 +4,7 @@
       <a-skeleton :loading="loading" active :row="4">
         <div class="slate_wrapper">
           <div class="poster">
-            <img :src="'https://images.weserv.nl/?url='+(info.images.large.slice(7))" alt srcset>
+            <img :src="info.images.large" alt srcset>
           </div>
           <div class="titleBar">
             <div class="rating">
@@ -44,7 +44,7 @@
                     <span>导演：</span>
                     <div class style="margin-left: 10px;">
                       <img
-                        :src="'https://images.weserv.nl/?url='+(info.directors[0].avatars.small.slice(7))"
+                        :src="info.directors[0].avatars.small"
                         style="height: 133px;border-radius: 10px;"
                         alt
                         srcset
@@ -90,7 +90,7 @@
                         style="margin-left: 10px;"
                       >
                         <img
-                          :src="'https://images.weserv.nl/?url='+(item.avatars.small.slice(7))"
+                          :src="item.avatars.small"
                           style="height: 75px;border-radius: 10px; margin-bottom: 10px "
                           alt
                           srcset
@@ -125,11 +125,7 @@
         <div class="paragraph_main">
           <div class="paragraph_add" v-if="isparagraph_add">
             <a-comment>
-              <a-avatar
-                slot="avatar"
-                :src="userinfo.avatar"
-                alt="Han Solo"
-              />
+              <a-avatar slot="avatar" :src="userinfo.avatar" alt="Han Solo"/>
               <div slot="content">
                 <a-form-item>
                   <a-textarea v-model="new_paragraph.content" :rows="4"></a-textarea>
@@ -150,24 +146,24 @@
               <a-list-item slot="renderItem" slot-scope="item, index">
                 <a-comment :author="item.author" :avatar="item.avatar">
                   <template slot="actions">
-                    <!-- <span v-for="action in item.actions">{{action}}</span> -->
-                    <div class="paragraph_add" v-if="isparagraph_add">
-                    <a-comment>
-                      <a-avatar
-                        slot="avatar"
-                        src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                        alt="Han Solo"
-                      />
-                      <div slot="content">
-                        <a-form-item>
-                          <a-textarea :rows="4"></a-textarea>
-                        </a-form-item>
-                        <a-form-item>
-                          <a-button htmlType="submit" type="primary">Add Comment</a-button>
-                        </a-form-item>
-                      </div>
-                    </a-comment>
-          </div>
+                    <span v-for="(item, index) in actions" :key="index" @click="action(item.key)">{{item.name}}</span>
+                    <!-- <div class="paragraph_add" v-if="isparagraph_add">
+                      <a-comment>
+                        <a-avatar
+                          slot="avatar"
+                          src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                          alt="Han Solo"
+                        />
+                        <div slot="content">
+                          <a-form-item>
+                            <a-textarea :rows="4"></a-textarea>
+                          </a-form-item>
+                          <a-form-item>
+                            <a-button htmlType="submit" type="primary">Add Comment</a-button>
+                          </a-form-item>
+                        </div>
+                      </a-comment>
+                    </div> -->
                   </template>
                   <p slot="content">{{item.content}}</p>
                   <a-tooltip slot="datetime" :title="item.datetime.format('YYYY-MM-DD HH:mm:ss')">
@@ -186,14 +182,14 @@
 
 
 <script>
-import moment from 'moment'
-import qs from 'qs'
+import moment from "moment";
+import qs from "qs";
 
 export default {
   data() {
     return {
-      userinfo:{
-        avatar:''
+      userinfo: {
+        avatar: ""
       },
       movie_id: this.$route.params.id,
       info: {
@@ -204,32 +200,42 @@ export default {
           average: []
         },
         countries: [],
-        cats:[],
-        directors:[{avatars:{small:''},name:''}]
+        cats: [],
+        directors: [{ avatars: { small: "" }, name: "" }]
       },
       loading: true,
       isparagraph_add: false,
 
-      new_paragraph:{
-        content:''
+      actions:[
+        {
+          name:'回复',
+          key:'replyto'
+        }
+      ],
+      new_paragraph: {
+        content: ""
       },
       data: [
         {
-          actions: ['Reply to'],
-          author: 'Han Solo',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-          datetime: moment().subtract(1, 'days'),
+          actions: ["Reply to"],
+          author: "Han Solo",
+          avatar:
+            "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+          content:
+            "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+          datetime: moment().subtract(1, "days")
         },
         {
-          actions: ['Reply to'],
-          author: 'Han Solo',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-          datetime: moment().subtract(2, 'days'),
-        },
+          actions: ["Reply to"],
+          author: "Han Solo",
+          avatar:
+            "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+          content:
+            "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+          datetime: moment().subtract(2, "days")
+        }
       ],
-      moment,
+      moment
     };
   },
   methods: {
@@ -237,32 +243,44 @@ export default {
       this.$axios.get("/api/movieinfo/" + this.movie_id).then(res => {
         console.log(res.data);
         this.info = res.data.data;
-
+    
         setTimeout(() => {
           this.loading = false;
         }, 1000);
       });
     },
+    action(key){
+      if (key == 'replyto') {
+        this.replyTo();
+      }
+    },
+    replyTo() {
+
+    },
     paragraph() {
       this.isparagraph_add = !this.isparagraph_add;
     },
-    postNewParagraph(){
+    postNewParagraph() {
       this.new_paragraph.movie_id = this.movie_id;
-this.new_paragraph.user_avatar = this.userinfo.avatar;
+      this.new_paragraph.user_avatar = this.userinfo.avatar;
       this.new_paragraph.user_email = this.userinfo.email;
-      
 
-      this.$axios.post("/api/paragraph/add" , qs.stringify(this.new_paragraph)).then(res =>{
-          console.log(res);
-          
-      })
+      this.$axios.post("/api/paragraph/add", this.new_paragraph).then(res => {
+        console.log(res);
+        this.$message({
+          message: "添加成功",
+          type: "success"
+        });
+        this.new_paragraph.content =""
+      });
     }
   },
   created() {
     this.getinfo();
-    this.userinfo = this.$store.state.Userinfo || JSON.parse(localStorage.getItem("setUserinfo")) ;
-    
-  },
+    this.userinfo =
+      this.$store.state.Userinfo ||
+      JSON.parse(localStorage.getItem("setUserinfo"));
+  }
 };
 </script>
 

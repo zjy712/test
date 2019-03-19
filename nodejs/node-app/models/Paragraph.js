@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ParagraphSchema = new Schema({
-    
+    paragraph_id: {
+        type: Number,
+        default: -1
+    },
     movie_id: {
         type: String,
         required: true

@@ -29,57 +29,75 @@ router.get('/', passport.authenticate("jwt", { session: false }), (req, res) => 
 // @access public
 router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) => {
     var id = req.params.id;
-    Movieinfo.findOne({ id: req.params.id })
-        .then((movieinfo) => {
-            if (!movieinfo) {
-                // return res.status(404).json({ msg: '无内容' })
-                var options = {
-                    url: 'https://douban.uieee.com/v2/movie/subject/' + id,
-                    headers: {
-                        'Content-Type': 'application/xml; charset=utf-8',
-                        'Transfer-Encoding': 'chunked'
-                    }
-                }
-                // 查询豆瓣api
-                request(options, (err, res1, body) => {
-                    var info = JSON.parse(body);
-                    if (info.code == 112) {
-                        res.json({ code: 11, msg: '超出API请求速率' })
-                        return
-                    }
-                    if (info.code != 5000) {
-                        const newmovieinfo = new Movieinfo({
-                            id: info.id,
-                            title: info.title,
-                            aka: info.aka,
-                            year: info.year,
-                            countries: info.countries,
-                            original_title: info.original_title,
-                            genres: info.genres,
-                            directors: info.directors,
-                            casts: info.casts,
-                            images: info.images,
-                            summary: info.summary,
-                            reviews_count: 1
-                        })
-                        // 储存到本地服务器
-                        newmovieinfo.save()
-                            .then(movieinfo => res.json({ code: 0, data: movieinfo }))
-                            .catch(err => console.log(err))
-                    } else {
-                        res.json({ code: 11, msg: '不存在此电影' })
-                    }
-
+    // Paragraph.find({ movie_id: id, parent_paragraph: 0 },function (err,rs) {
+    //     if (err) {
+    //         console.log(err);
+    //         return
+    //     }
+        
+    // })
+    async function parentData() {
+        return new Promise((resolve,err) => {
+            Paragraph.find({ movie_id: id, parent_paragraph:0})
+                .then((paragraph) => {
+                    resolve(paragraph)
                 })
-
-            } else {
-                Movieinfo.findOneAndUpdate({ id: id }, { $inc: { reviews_count: 1 } }, { new: true })
-                    .then(movieinfo => res.json({ code: 0, data: movieinfo }))
+                .catch(err => {
+                    res.json({ code: 11, msg: '查询失败' })
+                })
+        })
+        
+    }
+    async function childDate(data) {
+        console.log(data);
+        if (data.children_paragraph != 0) 
+        return new Promise((resolve, err) => {
+            {
+                Paragraph.find({ movie_id: id, parent_paragraph: data.paragraph_id })
+                    .then((childrens) => {
+                    // data.children = childrens;
+                        resolve(childrens)
+                })
             }
+        }).then((childrens) => {
+            data.children = childrens;
         })
-        .catch(err => {
-            res.json({ code: 11, msg: '查询失败' })
-        })
+
+    }
+    async function getParagraph() {
+        var data = await parentData(data);
+        // await childDate(data);
+        for (let i = 0; i < data.length; i++) {
+            // const ele = data[i];
+            data[i].children = []
+            await childDate(data[i]);
+        }
+        // data.forEach(ele => {
+            
+        // });
+        // console.log(data);
+        data[0].children2 = [{a:1}]
+        console.log('123'+data);
+        // res.json(data)
+    }
+    getParagraph();
+    // Paragraph.find({ movie_id: id, parent_paragraph:0})
+    //     .then((paragraph) => {
+    //         paragraph.forEach(ele => {
+    //             if (ele.children_paragraph != 0) {
+    //                 Paragraph.find({ movie_id: id, parent_paragraph: ele.paragraph_id })
+    //                     .then((childrens) => {
+    //                         ele.children = childrens;
+                            
+    //                     })
+    //             }
+                
+    //         })
+    //         res.json({ code: 11, paragraph })
+    //     })
+    //     .catch(err => {
+    //         res.json({ code: 11, msg: '查询失败' })
+    //     })
 })
 
 // $route POST api/movieinfo/update:id
@@ -105,14 +123,21 @@ router.post('/update/:id', passport.authenticate("jwt", { session: false }), (re
 // @access public
 router.post('/add', passport.authenticate("jwt", { session: false }), (req, res) => {
     // res.json({ msg: "Movieinfo works" })
-    const newParagraph = {
-        movie_id: req.body.movie_id,
-        user_email: req.body.user_email,
-        user_avatar: req.body.user_avatar,
-        content: req.body.content,
-    };
-    new Paragraph(newParagraph).save()
-        .then(paragraph => res.json({ code: 11, msg: 'success', data: paragraph}))
+    Paragraph.count({}).then(data => {
+        length = data+1;
+        console.log(length);
+        const newParagraph = {
+            paragraph_id: length,
+            movie_id: req.body.movie_id,
+            user_email: req.body.user_email,
+            user_avatar: req.body.user_avatar,
+            content: req.body.content,
+        };
+        new Paragraph(newParagraph).save()
+            .then(paragraph => res.json({ code: 11, msg: 'success', data: paragraph }))
+
+    })
+    
 })
 
 // $route POST api/movieinfo/edit
