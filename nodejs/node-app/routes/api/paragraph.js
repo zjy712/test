@@ -45,40 +45,48 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
                 .catch(err => {
                     res.json({ code: 11, msg: '查询失败' })
                 })
+        }).then(paragraph => {
+            return paragraph
         })
         
     }
     async function childDate(data) {
         console.log(data);
-        if (data.children_paragraph != 0) 
-        return new Promise((resolve, err) => {
-            {
+        if (data.children_paragraph != 0) {
+            return new Promise((resolve, err) => {
                 Paragraph.find({ movie_id: id, parent_paragraph: data.paragraph_id })
                     .then((childrens) => {
                     // data.children = childrens;
-                        resolve(childrens)
+                     resolve(childrens)
                 })
-            }
-        }).then((childrens) => {
-            data.children = childrens;
-        })
-
+            }).then(children => {
+                return children
+            })
+        } else {
+            return []
+        }
     }
     async function getParagraph() {
-        var data = await parentData(data);
+        var data = Array([],await parentData(data)); 
+        var count = 0;
+        var children = [];
         // await childDate(data);
         for (let i = 0; i < data.length; i++) {
             // const ele = data[i];
-            data[i].children = []
-            await childDate(data[i]);
+            data[i].children = [];
+            
+            children = await childDate(data[i]);
+            data[i].children = children;
+            // data[i] = Object.assign({...data[i],children})
         }
         // data.forEach(ele => {
             
         // });
         // console.log(data);
-        data[0].children2 = [{a:1}]
-        console.log('123'+data);
-        // res.json(data)
+        // data[0].children2 = [{a:1}]
+        // console.log('123'+data);
+        
+        res.json({count,data,children})
     }
     getParagraph();
     // Paragraph.find({ movie_id: id, parent_paragraph:0})
