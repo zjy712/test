@@ -29,6 +29,9 @@
     box-shadow: 0 1px 3px rgba(26, 26, 26, 0.1);
     background-clip: content-box;
 }
+#header i {
+    font-size: 22px;
+}
 .header_inner {
     position: relative;
     display: flex;

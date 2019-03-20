@@ -137,17 +137,18 @@
             </a-comment>
           </div>
           <div class="paragraph_list">
+
             <a-list
               class="comment-list"
               :header="`${data.length} replies`"
               itemLayout="horizontal"
-              :dataSource="data"
+              :dataSource="paragraphList"
             >
               <a-list-item slot="renderItem" slot-scope="item, index">
-                <a-comment :author="item.author" :avatar="item.avatar">
+                <a-comment :author="item.user_name" :avatar="item.user_avatar">
                   <template slot="actions">
                     <span v-for="(item, index) in actions" :key="index" @click="action(item.key)">{{item.name}}</span>
-                    <!-- <div class="paragraph_add" v-if="isparagraph_add">
+                    <div class="paragraph_add" v-if="isparagraph_add">
                       <a-comment>
                         <a-avatar
                           slot="avatar"
@@ -163,11 +164,11 @@
                           </a-form-item>
                         </div>
                       </a-comment>
-                    </div> -->
+                    </div>
                   </template>
                   <p slot="content">{{item.content}}</p>
-                  <a-tooltip slot="datetime" :title="item.datetime.format('YYYY-MM-DD HH:mm:ss')">
-                    <span>{{item.datetime.fromNow()}}</span>
+                  <a-tooltip slot="datetime" :title="item.date">
+                    <span>{{item.date}}</span>
                   </a-tooltip>
                 </a-comment>
               </a-list-item>
@@ -184,10 +185,37 @@
 <script>
 import moment from "moment";
 import qs from "qs";
+const listData = []
+for (let i = 0; i < 23; i++) {
+  listData.push({
+    href: 'https://vue.ant.design/',
+    title: `ant design vue part ${i}`,
+    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+    content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+  })
+}
 
 export default {
   data() {
     return {
+      listData,
+      pagination: {
+        onChange: (page) => {
+          console.log(page);
+        },
+        pageSize: 3,
+      },
+      actions: [
+        { type: 'star-o', text: '156' },
+        { type: 'like-o', text: '156' },
+        { type: 'message', text: '2' },
+      ],
+      paragraphList:[],
+      loading: true,
+      loadingMore: false,
+      showLoadingMore: true,
+      data: [],
       userinfo: {
         avatar: ""
       },
@@ -206,12 +234,12 @@ export default {
       loading: true,
       isparagraph_add: false,
 
-      actions:[
-        {
-          name:'回复',
-          key:'replyto'
-        }
-      ],
+      // actions:[
+      //   {
+      //     name:'回复',
+      //     key:'replyto'
+      //   }
+      // ],
       new_paragraph: {
         content: ""
       },
@@ -263,7 +291,7 @@ export default {
     postNewParagraph() {
       this.new_paragraph.movie_id = this.movie_id;
       this.new_paragraph.user_avatar = this.userinfo.avatar;
-      this.new_paragraph.user_email = this.userinfo.email;
+      this.new_paragraph.user_name = this.userinfo.name;
 
       this.$axios.post("/api/paragraph/add", this.new_paragraph).then(res => {
         console.log(res);
@@ -273,6 +301,14 @@ export default {
         });
         this.new_paragraph.content =""
       });
+    },
+    getParagraph() {
+      this.$axios.get("/api/paragraph/"+ this.movie_id).then(res => {
+        this.paragraphList = res.data.data;
+        debugger
+        console.log(this.paragraphList.children);
+        
+      })
     }
   },
   created() {
@@ -280,6 +316,7 @@ export default {
     this.userinfo =
       this.$store.state.Userinfo ||
       JSON.parse(localStorage.getItem("setUserinfo"));
+      this.getParagraph()
   }
 };
 </script>

@@ -10,12 +10,20 @@ const ParagraphSchema = new Schema({
         type: String,
         required: true
     },
-    user_email: {
+    user_name: {
         type: String,
         required: true
     },
     user_avatar: {
         type: String,
+    },
+    reply_name:{
+        type: String,
+        default:'0'
+    },
+    reply_avatar: {
+        type: String,
+        default: '0'
     },
     content: {
         type: String,

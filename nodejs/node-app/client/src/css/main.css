@@ -41,6 +41,17 @@ a:visited {
   text-decoration: none;
 }
 
-i {
+/* i {
       font-size: 22px;
+} */
+.ant-list-item-meta-content h4 {
+  margin-bottom: 0px !important;
+}
+.ant-list-vertical .ant-list-item-meta {
+  margin-bottom: 5px !important;
+  display: flex;
+    align-items: center;
+}
+.ant-list-vertical .ant-list-item-content {
+  text-indent: 10px;
 }

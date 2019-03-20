@@ -38,7 +38,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
     // })
     async function parentData() {
         return new Promise((resolve,err) => {
-            Paragraph.find({ movie_id: id, parent_paragraph:0})
+            Paragraph.find({ movie_id: id, parent_paragraph: 0 }).lean()
                 .then((paragraph) => {
                     resolve(paragraph)
                 })
@@ -67,7 +67,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
         }
     }
     async function getParagraph() {
-        var data = Array([],await parentData(data)); 
+        var data = await parentData(data); 
         var count = 0;
         var children = [];
         // await childDate(data);
@@ -86,7 +86,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
         // data[0].children2 = [{a:1}]
         // console.log('123'+data);
         
-        res.json({count,data,children})
+        res.json({ code: 11, data:data })
     }
     getParagraph();
     // Paragraph.find({ movie_id: id, parent_paragraph:0})
@@ -137,7 +137,7 @@ router.post('/add', passport.authenticate("jwt", { session: false }), (req, res)
         const newParagraph = {
             paragraph_id: length,
             movie_id: req.body.movie_id,
-            user_email: req.body.user_email,
+            user_name: req.body.user_name,
             user_avatar: req.body.user_avatar,
             content: req.body.content,
         };
