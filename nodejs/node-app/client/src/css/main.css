@@ -55,3 +55,11 @@ a:visited {
 .ant-list-vertical .ant-list-item-content {
   text-indent: 10px;
 }
+.ant-avatar {
+  height: 50px !important;
+  width: 50px !important;
+}
+.ant-avatar img {
+  height: 50px !important;
+  width: 50px !important;
+}

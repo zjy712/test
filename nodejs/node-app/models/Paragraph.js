@@ -29,7 +29,10 @@ const ParagraphSchema = new Schema({
         type: String,
         required: true
     },
-    
+    like_num:{
+        type:Number,
+        default: 0
+    },
     children_paragraph: {
         type: Number,
         default: 0

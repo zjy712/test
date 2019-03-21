@@ -137,7 +137,9 @@
             </a-comment>
           </div>
           <div class="paragraph_list">
-              <comment-list></comment-list>
+              <comment-list>
+                <comment-list></comment-list>
+              </comment-list>
             <!-- <a-list
               class="comment-list"
               :header="`${data.length} replies`"
@@ -309,7 +311,6 @@ export default {
     getParagraph() {
       this.$axios.get("/api/paragraph/"+ this.movie_id).then(res => {
         this.paragraphList = res.data.data;
-        debugger
         console.log(this.paragraphList.children);
         
       })

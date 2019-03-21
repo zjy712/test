@@ -49,7 +49,6 @@ axios.interceptors.response.use(response => {
     // return resdiglog(response.data);
 }, err => {
     endLoading();
-    debugger
     Message.error('出错');
     console.log(err.response.data);
     
