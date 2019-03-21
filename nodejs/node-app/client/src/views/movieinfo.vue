@@ -137,8 +137,8 @@
             </a-comment>
           </div>
           <div class="paragraph_list">
-
-            <a-list
+              <comment-list></comment-list>
+            <!-- <a-list
               class="comment-list"
               :header="`${data.length} replies`"
               itemLayout="horizontal"
@@ -172,7 +172,7 @@
                   </a-tooltip>
                 </a-comment>
               </a-list-item>
-            </a-list>
+            </a-list> -->
           </div>
         </div>
       </el-card>
@@ -184,6 +184,7 @@
 
 <script>
 import moment from "moment";
+import CommentList from '@c/CommentList.vue'
 import qs from "qs";
 const listData = []
 for (let i = 0; i < 23; i++) {
@@ -265,6 +266,9 @@ export default {
       ],
       moment
     };
+  },
+  components:{
+    CommentList
   },
   methods: {
     getinfo() {
