@@ -29,16 +29,10 @@ router.get('/', passport.authenticate("jwt", { session: false }), (req, res) => 
 // @access public
 router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) => {
     var id = req.params.id;
-    // Paragraph.find({ movie_id: id, parent_paragraph: 0 },function (err,rs) {
-    //     if (err) {
-    //         console.log(err);
-    //         return
-    //     }
-        
-    // })
+
     async function parentData() {
         return new Promise((resolve,err) => {
-            Paragraph.find({ movie_id: id, parent_paragraph: 0 }).lean()
+            Paragraph.find({ movie_id: id}).lean()
                 .then((paragraph) => {
                     resolve(paragraph)
                 })
@@ -50,42 +44,25 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
         })
         
     }
-    async function childDate(data) {
-        console.log(data);
-        if (data.children_paragraph != 0) {
-            return new Promise((resolve, err) => {
-                Paragraph.find({ movie_id: id, parent_paragraph: data.paragraph_id })
-                    .then((childrens) => {
-                    // data.children = childrens;
-                     resolve(childrens)
-                })
-            }).then(children => {
-                return children
-            })
-        } else {
-            return []
-        }
-    }
+    // async function childDate(data) {
+    //     console.log(data);
+    //     if (data.children_paragraph != 0) {
+    //         return new Promise((resolve, err) => {
+    //             Paragraph.find({ movie_id: id, parent_paragraph: data.paragraph_id })
+    //                 .then((childrens) => {
+    //                 // data.children = childrens;
+    //                  resolve(childrens)
+    //             })
+    //         }).then(children => {
+    //             return children
+    //         })
+    //     } else {
+    //         return []
+    //     }
+    // }
     async function getParagraph() {
         var data = await parentData(data); 
-        var count = 0;
-        var children = [];
         // await childDate(data);
-        for (let i = 0; i < data.length; i++) {
-            // const ele = data[i];
-            data[i].children = [];
-            
-            children = await childDate(data[i]);
-            data[i].children = children;
-            // data[i] = Object.assign({...data[i],children})
-        }
-        // data.forEach(ele => {
-            
-        // });
-        // console.log(data);
-        // data[0].children2 = [{a:1}]
-        // console.log('123'+data);
-        
         res.json({ code: 11, data:data })
     }
     getParagraph();

@@ -11,7 +11,7 @@
                 <div class="popover">
                     <i class="el-icon-bell"></i></div>
                 <div class="header_profile">
-                    <img :src="userinfo.avatar" width="30px" alt="">
+                    <img :src="userinfo.avatar" width="45px" alt="">
                 </div>
 
             </div>

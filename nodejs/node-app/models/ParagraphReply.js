@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const MessageSchema = new Schema({
-    message_id: {
+const ParagraphReplySchema = new Schema({
+    paragraphReply_id:{
+
+    },
+    paragraph_id: {
         type: Number,
         default: -1
     },
@@ -25,20 +28,8 @@ const MessageSchema = new Schema({
         type: String,
         required: true
     },
-    type: {
-        type: String,
-        required: true
-    },
-    type_id: {
-        type: Number,
-        default: -1
-    },
-    is_read: {
-        type: Number,
-        default: 0
-    },
-    status: {
-        type: Number,
+    like_num:{
+        type:Number,
         default: 0
     },
     date: {
@@ -47,4 +38,4 @@ const MessageSchema = new Schema({
     },
 })
 
-module.exports = Message = mongoose.model("paragraph", MessageSchema);
+module.exports = ParagraphReply = mongoose.model("paragraphReply", ParagraphReplySchema);
