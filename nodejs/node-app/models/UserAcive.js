@@ -6,11 +6,7 @@ const UserAciveSchema = new Schema({
         type: Number,
         default: -1
     },
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
+    user_name: {
         type: String,
         required: true
     },

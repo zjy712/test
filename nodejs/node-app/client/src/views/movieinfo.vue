@@ -120,6 +120,7 @@
       <el-card class="el_card">
         <div class="summary_title clearfix" slot="header">
           <span>留言</span>
+          <span class="total">全部{{total}}条</span>
           <el-button style="float: right; padding: 3px 0" type="text" @click="paragraph">写留言</el-button>
         </div>
         <div class="paragraph_main">
@@ -137,7 +138,7 @@
             </a-comment>
           </div>
           <div class="paragraph_list">
-              <comment-list :list ="paragraphList"></comment-list>
+              <comment-list v-on:click-page = "getPage" :movie_id="movie_id" :list ="paragraphList" :total = "total"></comment-list>
             <!-- <a-list
               class="comment-list"
               :header="`${data.length} replies`"
@@ -213,6 +214,7 @@ export default {
         { type: 'message', text: '2' },
       ],
       paragraphList:[],
+      total: 0,
       loading: true,
       loadingMore: false,
       showLoadingMore: true,
@@ -307,11 +309,21 @@ export default {
       });
     },
     getParagraph() {
-      debugger
+      // debugger
       this.$axios.get("/api/paragraph/"+ this.movie_id).then(res => {
         this.paragraphList = res.data.data;
-        console.log(this.paragraphList.children);
-        
+        this.total = res.data.totalnum;
+      })
+    },
+    getPage(page) {
+      console.log(page);
+      
+      var req = {
+        movie_id : this.movie_id,
+        page : page
+      }
+      this.$axios.post("/api/paragraph/page",req).then(res => {
+        this.paragraphList = res.data.data;
       })
     }
   },
@@ -409,5 +421,8 @@ export default {
 }
 .small {
   font-size: 10px;
+}
+.total {
+  margin-left: 10px;
 }
 </style>

@@ -5,6 +5,10 @@ var request = require('request');
 const keys = require('../../config/keys')
 
 const Paragraph = require('../../models/Paragraph');
+const ParagraphReply = require('../../models/ParagraphReply');
+// const UserActive = require('../../models/UserAcive');
+
+const Module_Active = require('../../modules/Module_Active');
 
 const passport = require('passport')
 
@@ -30,9 +34,17 @@ router.get('/', passport.authenticate("jwt", { session: false }), (req, res) => 
 router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) => {
     var id = req.params.id;
 
+    async function getLength() {
+        return new Promise((resolve, err) => {
+            Paragraph.countDocuments({}).then(data => {
+                resolve(data);
+            })
+        })
+    };
+
     async function parentData() {
-        return new Promise((resolve,err) => {
-            Paragraph.find({ movie_id: id}).lean()
+        return new Promise((resolve, err) => {
+            Paragraph.find({ movie_id: id }).sort({ date: -1 }).limit(5).lean()
                 .then((paragraph) => {
                     resolve(paragraph)
                 })
@@ -42,49 +54,44 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
         }).then(paragraph => {
             return paragraph
         })
-        
     }
-    // async function childDate(data) {
-    //     console.log(data);
-    //     if (data.children_paragraph != 0) {
-    //         return new Promise((resolve, err) => {
-    //             Paragraph.find({ movie_id: id, parent_paragraph: data.paragraph_id })
-    //                 .then((childrens) => {
-    //                 // data.children = childrens;
-    //                  resolve(childrens)
-    //             })
-    //         }).then(children => {
-    //             return children
-    //         })
-    //     } else {
-    //         return []
-    //     }
-    // }
+
     async function getParagraph() {
-        var data = await parentData(data); 
+        var data = await parentData();
+        var totalnum = await getLength();
         // await childDate(data);
-        res.json({ code: 11, data:data })
+        res.json({ code: 11, data: data, totalnum})
     }
     getParagraph();
-    // Paragraph.find({ movie_id: id, parent_paragraph:0})
-    //     .then((paragraph) => {
-    //         paragraph.forEach(ele => {
-    //             if (ele.children_paragraph != 0) {
-    //                 Paragraph.find({ movie_id: id, parent_paragraph: ele.paragraph_id })
-    //                     .then((childrens) => {
-    //                         ele.children = childrens;
-                            
-    //                     })
-    //             }
-                
-    //         })
-    //         res.json({ code: 11, paragraph })
-    //     })
-    //     .catch(err => {
-    //         res.json({ code: 11, msg: '查询失败' })
-    //     })
 })
+// $route GET api/movieinfo/:id
+// @desc  返回json
+// @access public
+router.post('/page', passport.authenticate("jwt", { session: false }), (req, res) => {
+    var id = req.body.movie_id;
+    var page = req.body.page -1 ;
+    async function parentData() {
+        return new Promise((resolve, err) => {
+            Paragraph.find({ movie_id: id }).sort({ date: -1 }).skip(page*5).limit(5).lean()
+                .then((paragraph) => {
+                    resolve(paragraph)
+                })
+                .catch(err => {
+                    res.json({ code: 11, msg: '查询失败' })
+                })
+        }).then(paragraph => {
+            return paragraph
+        })
+    }
 
+    async function getParagraph() {
+        var data = await parentData(data);
+        var totalnum = data.length;
+        // await childDate(data);
+        res.json({ code: 11, data: data, totalnum })
+    }
+    getParagraph();
+})
 // $route POST api/movieinfo/update:id
 // @desc  返回json 想看，点赞
 // @access public
@@ -108,21 +115,47 @@ router.post('/update/:id', passport.authenticate("jwt", { session: false }), (re
 // @access public
 router.post('/add', passport.authenticate("jwt", { session: false }), (req, res) => {
     // res.json({ msg: "Movieinfo works" })
-    Paragraph.count({}).then(data => {
-        length = data+1;
-        console.log(length);
+
+    async function getLength() {
+        return new Promise((resolve, err) => {
+            Paragraph.countDocuments({}).then(data => {
+                resolve(data);
+            })
+        })
+    };
+
+    async function addDB(newParagraph) {
+        return new Promise((resolve, err) => {
+            new Paragraph(newParagraph).save()
+                .then(paragraph => {
+                    resolve(paragraph);
+                })
+        }).then(paragraph => {
+            res.json({ code: 11, msg: 'success', data: paragraph })
+        })
+    }
+
+    async function add() {
+        var paragraph_id = await getLength();
         const newParagraph = {
-            paragraph_id: length,
+            paragraph_id: paragraph_id,
             movie_id: req.body.movie_id,
             user_name: req.body.user_name,
             user_avatar: req.body.user_avatar,
             content: req.body.content,
         };
-        new Paragraph(newParagraph).save()
-            .then(paragraph => res.json({ code: 11, msg: 'success', data: paragraph }))
+        await addDB(newParagraph);
+        
+        // 记录操作
+        const newUserActive = {
+            user_name: newParagraph.user_name,
+            type: 'Paragraph',
+            type_id: paragraph_id
+        };
+        Module_Active.save(newUserActive)
+    }
+    add()
 
-    })
-    
 })
 
 // $route POST api/movieinfo/edit

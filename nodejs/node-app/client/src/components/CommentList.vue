@@ -1,7 +1,7 @@
 <template>
-  <div id="CommentList" >
-      <div v-for="(item, index) in list" :key="index">
-        <div class="comment_li">
+  <div id="CommentList">
+    <div v-for="(item, index) in list" :key="index">
+      <div class="comment_li">
         <div class="avatar">
           <img :src="item.user_avatar" alt>
         </div>
@@ -10,15 +10,14 @@
             <span class="name">{{item.user_name}}</span>
             <span class="date">{{item.date}}</span>
           </div>
-          <div
-            class="comment"
-          >{{item.content}}</div>
+          <div class="comment">{{item.content}}</div>
           <div class="active">
             <span>
-              <a-icon type="like-o" style="margin-right: 8px"/>点赞({{item.like_num}})
+              <a-icon type="like-o" />
+              点赞({{item.like_num}})
             </span>
             <span @click="showReply">
-              <a-ico type="message" style="margin-right: 8px"/>查看评论
+              <a-ico type="message" />查看评论
             </span>
           </div>
         </div>
@@ -36,17 +35,14 @@
             <div
               class="comment"
             >送钱送包送房，最怕送的是心动；打黑打恶打鬼，最怕打的是人心。可以剃了别人的发，断了别人的腿，拆了别人的房，顶了别人的罪。为恶党作伥，助权势为虐，因三千块用电棍打人，花五千块举着枪呲水。这世上有人为学区房摇不到号，有人随便送套房维护关系。有人住拆迁房尊严尽失，有人为了尊严命悬一线。</div>
-            <div class="active">
-              <span>
-                <a-icon type="like-o" style="margin-right: 8px"/>点赞
-              </span>
+            <div class="active2">
               <span @click="reply">
                 <a-ico type="message" style="margin-right: 8px"/>回复
               </span>
             </div>
           </div>
         </div>
-
+        
       </div>
       <div v-if="showreply" class="edit">
         <a-comment>
@@ -60,26 +56,44 @@
               <a-textarea :rows="4"></a-textarea>
             </a-form-item>
             <a-form-item>
-              <a-button htmlType="submit" type="primary" >提交</a-button>
+              <a-button htmlType="submit" type="primary">提交</a-button>
             </a-form-item>
           </div>
         </a-comment>
       </div>
     </div>
-    
+    <div v-if="total>5" class="list_pagination">
+      <a-pagination
+        simple
+        v-model="current"
+        :hideOnSinglePage="hideOnSinglePage"
+        :defaultPageSize="pagesize"
+        :total="total"
+        @change="change"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  props:{
-    list:{
-      type:Array
+  props: {
+    list: {
+      type: Array
+    },
+    total: {
+      type: Number
+    },
+    movie_id: {
+      type: String
     }
   },
   data() {
     return {
-      showreply: false
+      showreply: false,
+      current: 1,
+      pagesize: 5,
+      hideOnSinglePage: true
     };
   },
   methods: {
@@ -88,6 +102,20 @@ export default {
     },
     reply() {
       this.isedit = !this.isedit;
+    },
+    change(current, size) {
+      // console.log(currents, size);'
+      this.$emit('click-page',current)
+      // var req = {
+      //   movie_id : this.movie_id,
+      //   page : current
+      // }
+      // this.$axios.get("/api/paragraph/page"+ this.movie_id).then(res => {
+      //   this.paragraphList = res.data.data;
+      //   this.total = res.data.totalnum;
+      //   console.log(this.paragraphList.children);
+        
+      // })
     }
   }
 };
@@ -111,6 +139,12 @@ export default {
   position: relative;
 }
 .ant-list-split .ant-list-header {
+}
+.ant-pagination-simple {
+  text-align: right;
+}
+.list_pagination {
+  margin-top: 15px;
 }
 .avatar img {
   width: 50px;
@@ -161,12 +195,21 @@ export default {
   display: flex;
   justify-content: space-between;
   padding-right: 27px;
+  
+}
+.active span,.active2 span {
   cursor: pointer;
 }
+.active2 {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 27px;
+}
+
 .active span:hover {
   color: #1890ff;
 }
-.main{
-        width: 100%;
-    }
+.main {
+  width: 100%;
+}
 </style>
