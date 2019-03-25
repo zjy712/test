@@ -22,7 +22,7 @@
           </div>
         </div>
       </div>
-      <div v-if="showreply" class="replylist">
+      <div v-if="item.paragraph_id == currenID" class="replylist">
         <div v-for="(item, index) in replyList" :key="index" class="reply_li">
           <div class="avatar">
             <img :src="item.user_avatar" alt>
@@ -36,7 +36,7 @@
               class="comment"
             >{{item.content}}</div>
             <div class="active2">
-              <span @click="showReply">
+              <span @click="replylistClick(item)">
                 <a-ico type="message" style="margin-right: 8px"/>回复
               </span>
             </div>
@@ -44,7 +44,7 @@
         </div>
         
       </div>
-      <div v-if="showreply" class="edit">
+      <div v-if="item.paragraph_id == currenID" class="edit">
         <a-comment>
           <a-avatar
             slot="avatar"
@@ -100,12 +100,14 @@ export default {
       placeholder:'',
       replyItem:null,
       content:'',
-      replyList:[]
+      replyList:[],
+      currenID:-1
     };
   },
   methods: {
     showReply(item) {
       console.log(item);
+      this.currenID = item.paragraph_id;
       this.replyItem = item
       this.placeholder = '回复:'+item.user_name;
 
@@ -117,8 +119,10 @@ export default {
       this.showreply = !this.showreply;
     },
     reply() {
-      this.isedit = !this.isedit;
-      
+      // this.isedit = !this.isedit;
+    },
+    replylistClick(item){
+      this.placeholder = '回复:'+item.user_name;
     },
     replyRaragraph(){
       var req = {
