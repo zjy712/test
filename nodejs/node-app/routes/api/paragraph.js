@@ -36,7 +36,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
 
     async function getLength() {
         return new Promise((resolve, err) => {
-            Paragraph.countDocuments({}).then(data => {
+            Paragraph.countDocuments({ movie_id: id }).then(data => {
                 resolve(data);
             })
         })

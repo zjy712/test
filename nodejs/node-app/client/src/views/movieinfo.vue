@@ -138,7 +138,7 @@
             </a-comment>
           </div>
           <div class="paragraph_list">
-              <comment-list v-on:click-page = "getPage" :movie_id="movie_id" :list ="paragraphList" :total = "total"></comment-list>
+              <comment-list :userinfo = userinfo v-on:click-page = "getPage" :movie_id="movie_id" :list ="paragraphList" :total = "total"></comment-list>
             <!-- <a-list
               class="comment-list"
               :header="`${data.length} replies`"
@@ -312,12 +312,11 @@ export default {
       // debugger
       this.$axios.get("/api/paragraph/"+ this.movie_id).then(res => {
         this.paragraphList = res.data.data;
+        console.log(this.paragraphList);
         this.total = res.data.totalnum;
       })
     },
     getPage(page) {
-      console.log(page);
-      
       var req = {
         movie_id : this.movie_id,
         page : page

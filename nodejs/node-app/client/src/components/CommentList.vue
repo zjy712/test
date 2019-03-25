@@ -16,27 +16,27 @@
               <a-icon type="like-o" />
               点赞({{item.like_num}})
             </span>
-            <span @click="showReply">
+            <span @click="showReply(item)">
               <a-ico type="message" />查看评论
             </span>
           </div>
         </div>
       </div>
       <div v-if="showreply" class="replylist">
-        <div class="reply_li">
+        <div v-for="(item, index) in replyList" :key="index" class="reply_li">
           <div class="avatar">
-            <img src="http://localhost:5000/avatar/QQ图片20181213230228.jpg" alt>
+            <img :src="item.user_avatar" alt>
           </div>
           <div class="main">
             <div class="top">
-              <span class="name">一代卤蛋</span>
-              <span class="date">2015/12/12</span>
+              <span class="name">{{item.user_name}}</span>
+              <span class="date">{{item.date}}</span>
             </div>
             <div
               class="comment"
-            >送钱送包送房，最怕送的是心动；打黑打恶打鬼，最怕打的是人心。可以剃了别人的发，断了别人的腿，拆了别人的房，顶了别人的罪。为恶党作伥，助权势为虐，因三千块用电棍打人，花五千块举着枪呲水。这世上有人为学区房摇不到号，有人随便送套房维护关系。有人住拆迁房尊严尽失，有人为了尊严命悬一线。</div>
+            >{{item.content}}</div>
             <div class="active2">
-              <span @click="reply">
+              <span @click="showReply">
                 <a-ico type="message" style="margin-right: 8px"/>回复
               </span>
             </div>
@@ -53,10 +53,10 @@
           />
           <div slot="content">
             <a-form-item>
-              <a-textarea :rows="4"></a-textarea>
+              <a-textarea v-model="content" content :placeholder="placeholder" :rows="4"></a-textarea>
             </a-form-item>
             <a-form-item>
-              <a-button htmlType="submit" type="primary">提交</a-button>
+              <a-button htmlType="submit" @click="replyRaragraph()" type="primary">提交</a-button>
             </a-form-item>
           </div>
         </a-comment>
@@ -86,6 +86,9 @@ export default {
     },
     movie_id: {
       type: String
+    },
+    userinfo:{
+      type: Object
     }
   },
   data() {
@@ -93,15 +96,47 @@ export default {
       showreply: false,
       current: 1,
       pagesize: 5,
-      hideOnSinglePage: true
+      hideOnSinglePage: true,
+      placeholder:'',
+      replyItem:null,
+      content:'',
+      replyList:[]
     };
   },
   methods: {
-    showReply() {
+    showReply(item) {
+      console.log(item);
+      this.replyItem = item
+      this.placeholder = '回复:'+item.user_name;
+
+      this.$axios.get("/api/paragraphreply/"+ item.paragraph_id).then(res => {
+        this.replyList = res.data.data;
+        console.log(this.replyList);
+        // this.total = res.data.totalnum;
+      })
       this.showreply = !this.showreply;
     },
     reply() {
       this.isedit = !this.isedit;
+      
+    },
+    replyRaragraph(){
+      var req = {
+        paragraph_id : this.replyItem.paragraph_id,
+        user_name: this.userinfo.name,
+        user_avatar: this.userinfo.avatar,
+        reply_name:this.replyItem.user_name,
+        reply_avatar:this.replyItem.user_avatar,
+        content: this.content
+      }
+      this.$axios.post("/api/paragraphreply/add",req).then(res => {
+        console.log(res);
+        this.$message({
+          message: "添加成功",
+          type: "success"
+        });
+        this.content =""
+      })
     },
     change(current, size) {
       // console.log(currents, size);'

@@ -11,6 +11,8 @@ const profiles = require('./routes/api/profiles')
 const movieinfo = require('./routes/api/movieinfo')
 const boxoffice = require('./routes/api/boxoffice')
 const paragraph = require('./routes/api/paragraph')
+const paragraphreply = require('./routes/api/paragraphreply')
+
 // DB config
 const db = require('./config/keys').mongoURI;
 
@@ -36,6 +38,7 @@ app.use('/api/profiles', profiles);
 app.use('/api/movieinfo',movieinfo)
 app.use('/api/boxoffice',boxoffice)
 app.use('/api/paragraph', paragraph)
+app.use('/api/paragraphreply', paragraphreply)
 
 app.get('/',(req,res) => {
     res.end('hello world!')

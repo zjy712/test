@@ -28,10 +28,6 @@ const ParagraphReplySchema = new Schema({
         type: String,
         required: true
     },
-    like_num:{
-        type:Number,
-        default: 0
-    },
     date: {
         type: Date,
         default: Date.now
