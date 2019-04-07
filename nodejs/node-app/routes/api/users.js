@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 // const gravatar = require('gravatar')
 
 const fs = require('fs')
@@ -18,9 +18,6 @@ router.post(
     '/addavatar',
     avatarUpload.single('avatar'),
     (req, res) => {
-        // Set { new: true } to return the updated one, rather than the original one.
-        // const email = req.body.email;
-        // fs.rename(email,)
         console.log(req.file);
         fs.rename(req.file.path,'public/avatar/'+req.file.originalname,function (err) {
             if (err) {
@@ -29,16 +26,10 @@ router.post(
             console.log("上传成功");
             
         })
-        // res.writeHead(200,{
-        //     "Access-Control-Allow-Origin": "*"
-        // })
-        // res.end(JSON.stringify(req.file) + JSON.stringify(req.body));
-        // var data = JSON.parse(req.file)
-        var url = 'http://localhost:5000/avatar/' + req.file.originalname
+
+        var url = 'http://47.94.194.153:5000/avatar/' + req.file.originalname
         res.json({ code: 11, data: {url:url}})
-        // User.findByIdAndUpdate(email, { avatar: req.file.path }, { new: true }).then(user => {
-        //     res.json({ message: "ok" });
-        // });
+
     }
 );
 

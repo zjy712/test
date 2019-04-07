@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from './views/Index.vue'
+import { Loading } from 'element-ui';
 
 Vue.use(Router)
 
@@ -47,12 +48,29 @@ const router = new Router({
 
 // 路由守卫
 
+let loading; 
+function startLoading() {
+    loading = Loading.service({
+        lock: true,
+        text: '拼命加载中...',
+        background: 'rgba(0,0,0,0,7)'
+    });
+}
+function endLoading() {
+    loading.close()
+}
+
+
+
 router.beforeEach((to, from, next) => {
   const isLogin = localStorage.Token ? true : false;
+  startLoading()
   if (to.path == '/login' || to.path == '/register') {
     next();
+    endLoading()
   } else {
     isLogin ? next() : next('/login')
+    endLoading()
   }
 })
 

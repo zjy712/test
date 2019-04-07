@@ -1,30 +1,35 @@
 <template>
-  <div id="CommentList">
-    <div v-if="total != 0">
-      <div v-for="(item, index) in list" :key="index">
-        <div class="comment_li">
-          <div class="avatar">
-            <img :src="item.user_avatar" alt>
+  <div id="ArticleList">
+    <div v-if="total !=0">
+      <div class="comment_li" v-for="(item, index) in list" :key="index">
+        <div class="avatar">
+          <img :src="item.user_avatar" alt>
+        </div>
+        <div class="main">
+          <div class="top">
+            <span class="name">{{item.user_name}}</span>
+            <el-rate style="margin-left:5px;" v-model="item.rating" disabled></el-rate>
+            <span class="date">{{item.date}}</span>
           </div>
-          <div class="main">
-            <div class="top">
-              <span class="name">{{item.user_name}}</span>
-              <span class="date">{{item.date}}</span>
-            </div>
-            <div class="comment">{{item.content}}</div>
-            <div class="active">
-              <span>
-                <a-icon type="like-o"/>
-                点赞({{item.like_num}})
-              </span>
-              <span @click="showReply(item)">
-                <a-ico type="message"/>查看评论
-              </span>
-            </div>
+          <div class="title" @click="rowClick(item.article_id)">
+            <a>{{item.title}}</a>
+          </div>
+          <div class="contont">
+            <p>{{item.topic}}...</p>
+          </div>
+          <div class="active">
+            <span>
+              <a-icon type="like-o"/>
+              点赞({{item.like_num}})
+            </span>
+            <span>
+              <a-ico type="message"/>查看评论
+            </span>
           </div>
         </div>
-        <a-skeleton v-if="item.paragraph_id == currenID" :loading="loading" active>
-          <div  class="replylist">
+      </div>
+      <a-skeleton v-if="item.paragraph_id == currenID" :loading="loading" active>
+        <div class="replylist">
           <div v-for="(item, index) in replyList" :key="index" class="reply_li">
             <div class="avatar">
               <img :src="item.user_avatar" alt>
@@ -43,29 +48,23 @@
             </div>
           </div>
         </div>
-        </a-skeleton>
-        
-        <div v-if="item.paragraph_id == currenID" class="edit">
-          <a-comment>
-            <a-avatar
-              slot="avatar"
-              :src="userinfo.avatar"
-              alt="Han Solo"
-            />
-            <div slot="content">
-              <a-form-item>
-                <a-textarea v-model="content" content :placeholder="placeholder" :rows="4"></a-textarea>
-              </a-form-item>
-              <a-form-item>
-                <a-button htmlType="submit" @click="replyRaragraph(item)" type="primary">提交</a-button>
-              </a-form-item>
-            </div>
-          </a-comment>
-        </div>
+      </a-skeleton>
+
+      <div v-if="item.paragraph_id == currenID" class="edit">
+        <a-comment>
+          <a-avatar slot="avatar" :src="userinfo.avatar" alt="Han Solo"/>
+          <div slot="content">
+            <a-form-item>
+              <a-textarea v-model="content" content :placeholder="placeholder" :rows="4"></a-textarea>
+            </a-form-item>
+            <a-form-item>
+              <a-button htmlType="submit" @click="replyRaragraph(item)" type="primary">提交</a-button>
+            </a-form-item>
+          </div>
+        </a-comment>
       </div>
     </div>
     <div v-if="total== 0" class="list_zero">暂无数据</div>
-
     <div v-if="total>5" class="list_pagination">
       <a-pagination
         simple
@@ -76,11 +75,17 @@
         @change="change"
       />
     </div>
+    <article-details ref="child" :details="articleDetails"></article-details>
   </div>
 </template>
 
 <script>
+import ArticleDetails from "@c/ArticleDetails.vue";
+
 export default {
+  components: {
+    ArticleDetails
+  },
   props: {
     list: {
       type: Array
@@ -106,7 +111,12 @@ export default {
       content: "",
       replyList: [],
       currenID: -1,
-      loading: true,
+      rating: 2,
+      articleDetails: {
+        rating: 0,
+        content: "",
+        title: ""
+      }
     };
   },
   methods: {
@@ -115,12 +125,11 @@ export default {
       this.currenID = item.paragraph_id;
       this.replyItem = item;
       this.placeholder = "回复:" + item.user_name;
-      this.loading = true;
+
       this.$axios.get("/api/paragraphreply/" + item.paragraph_id).then(res => {
         this.replyList = res.data.data;
         console.log(this.replyList);
         // this.total = res.data.totalnum;
-        this.loading = false;
       });
       this.showreply = !this.showreply;
     },
@@ -130,7 +139,7 @@ export default {
     replylistClick(item) {
       this.placeholder = "回复:" + item.user_name;
     },
-    replyRaragraph(item) {
+    replyRaragraph() {
       var req = {
         paragraph_id: this.replyItem.paragraph_id,
         user_name: this.userinfo.name,
@@ -146,29 +155,28 @@ export default {
           type: "success"
         });
         this.content = "";
-        this.showReply(item)
       });
     },
     change(current, size) {
       // console.log(currents, size);'
       this.$emit("click-page", current);
-      // var req = {
-      //   movie_id : this.movie_id,
-      //   page : current
-      // }
-      // this.$axios.get("/api/paragraph/page"+ this.movie_id).then(res => {
-      //   this.paragraphList = res.data.data;
-      //   this.total = res.data.totalnum;
-      //   console.log(this.paragraphList.children);
-
-      // })
+    },
+    getDetails(id) {
+      this.$axios.post("/api/article/details", { id }).then(res => {
+        console.log(res.data);
+        this.articleDetails = res.data.data;
+      });
+    },
+    rowClick(id) {
+      this.getDetails(id);
+      this.$refs.child.show = true;
     }
   }
 };
 </script>
 
 <style scoped>
-#CommentList {
+#ArticleList {
   font-family: "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI",
     "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue",
     Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
@@ -183,6 +191,9 @@ export default {
   padding: 0;
   list-style: none;
   position: relative;
+}
+#ArticleList a {
+  display: inline;
 }
 .ant-list-split .ant-list-header {
 }
@@ -216,6 +227,7 @@ export default {
 }
 .top {
   height: 28px;
+  display: flex;
 }
 .name {
   color: rgba(0, 0, 0, 0.65);
@@ -232,6 +244,10 @@ export default {
   font-size: 12px;
   line-height: 18px;
   padding-left: 8px;
+}
+.title {
+  margin-bottom: 10px;
+  margin-top: 0;
 }
 .comment {
   color: #303133;

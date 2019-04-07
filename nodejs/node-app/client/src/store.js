@@ -5,14 +5,19 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    Userinfo: ''
+    Userinfo: {},
+    Movieinfo:{},
   },
   mutations: {
     setUserinfo(state, data) {
       state.Userinfo = data;
     },
+    setMovieinfo(state, data) {
+      state.Movieinfo = data;
+    },
   },
   actions: {
     commitLoginState: ({ commit }, Userinfo) => commit('setUserinfo', Userinfo),
+    commitMovieinfo: ({ commit }, Movieinfo) => commit('setMovieinfo', Movieinfo),
   }
 })

@@ -20,6 +20,14 @@ a {
     color: inherit;
     text-decoration: none;
 }
+a:link {
+    color: #37a;
+    text-decoration: none;
+}
+
+.list_zero {
+    text-align: center;
+}
  
 /* a:-webkit-any-link {
     color: -webkit-link;

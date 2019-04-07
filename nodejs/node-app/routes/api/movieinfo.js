@@ -29,16 +29,16 @@ router.get('/', passport.authenticate("jwt", { session: false }), (req, res) => 
 // @access public
 router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) => {
     var id = req.params.id;
+    if (!id) {
+        return res.json({ code: 11, msg: 'id bug' })
+    }
     Movieinfo.findOne({ id: req.params.id })
         .then((movieinfo) => {
             if (!movieinfo) {
                 // return res.status(404).json({ msg: '无内容' })
                 var options = {
-                    url: 'https://douban.uieee.com/v2/movie/subject/' + id,
-                    headers:{
-                        'Content-Type':'application/xml; charset=utf-8',
-                        'Transfer-Encoding':'chunked'
-                    }
+                    url: keys.doubanOptions.movieUrl + id,
+                    headers: keys.doubanOptions.headers
                 }
                 // 查询豆瓣api
                 request(options, (err, res1, body) => {

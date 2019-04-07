@@ -29,12 +29,6 @@
               <span
                 class="aka"
               >{{ (info.countries.indexOf('中国大陆')>-1 || info.countries.indexOf('香港')>-1 || info.countries.indexOf('台湾')>-1) ? info.aka.split(',')[info.aka.split(',').length-1] :info.original_title}}</span>
-              <!-- <div style="margin-left:45px;display: inline-block;">
-            <span v-for="(item, index) in info.genres" :key="index">{{item +' '}}</span>
-          </div>
-          <div style="margin-left:45px;display: inline-block;">
-            <span v-for="(item, index) in info.countries" :key="index">{{item +' '}}</span>
-              </div>-->
             </div>
 
             <div class="center">
@@ -138,43 +132,35 @@
             </a-comment>
           </div>
           <div class="paragraph_list">
-              <comment-list :userinfo = userinfo v-on:click-page = "getPage" :movie_id="movie_id" :list ="paragraphList" :total = "total"></comment-list>
-            <!-- <a-list
-              class="comment-list"
-              :header="`${data.length} replies`"
-              itemLayout="horizontal"
-              :dataSource="paragraphList"
-            >
-              <a-list-item slot="renderItem" slot-scope="item, index">
-                <a-comment :author="item.user_name" :avatar="item.user_avatar">
-                  <template slot="actions">
-                    <span v-for="(item, index) in actions" :key="index" @click="action(item.key)">{{item.name}}</span>
-                    <div class="paragraph_add" v-if="isparagraph_add">
-                      <a-comment>
-                        <a-avatar
-                          slot="avatar"
-                          src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                          alt="Han Solo"
-                        />
-                        <div slot="content">
-                          <a-form-item>
-                            <a-textarea :rows="4"></a-textarea>
-                          </a-form-item>
-                          <a-form-item>
-                            <a-button htmlType="submit" type="primary">Add Comment</a-button>
-                          </a-form-item>
-                        </div>
-                      </a-comment>
-                    </div>
-                  </template>
-                  <p slot="content">{{item.content}}</p>
-                  <a-tooltip slot="datetime" :title="item.date">
-                    <span>{{item.date}}</span>
-                  </a-tooltip>
-                </a-comment>
-              </a-list-item>
-            </a-list> -->
+            <comment-list
+              :userinfo="userinfo"
+              v-on:click-page="getPage"
+              :movie_id="movie_id"
+              :list="paragraphList"
+              :total="total"
+            ></comment-list>
           </div>
+        </div>
+      </el-card>
+    </a-skeleton>
+    <a-skeleton :loading="loading" active>
+      <el-card class="el_card">
+        <div class="summary_title clearfix" slot="header">
+          <span>影评</span>
+          <span class="total">全部{{articleTotal}}条</span>
+          <el-button style="float: right; padding: 3px 0" type="text" @click="article">影评</el-button>
+        </div>
+        <div class="Editor">
+          <Editor ref="child"></Editor>
+        </div>
+        <div>
+          <article-list
+            :userinfo="userinfo"
+            v-on:click-page="getArticlePage"
+            :movie_id="movie_id"
+            :list="articleList"
+            :total="articleTotal"
+          ></article-list>
         </div>
       </el-card>
     </a-skeleton>
@@ -185,35 +171,26 @@
 
 <script>
 import moment from "moment";
-import CommentList from '@c/CommentList.vue'
+import CommentList from "@c/CommentList.vue";
+import ArticleList from "@c/ArticleList.vue";
+import Editor from "@c/Editor.vue";
 import qs from "qs";
-const listData = []
-for (let i = 0; i < 23; i++) {
-  listData.push({
-    href: 'https://vue.ant.design/',
-    title: `ant design vue part ${i}`,
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  })
-}
 
 export default {
   data() {
     return {
-      listData,
       pagination: {
-        onChange: (page) => {
+        onChange: page => {
           console.log(page);
         },
-        pageSize: 3,
+        pageSize: 3
       },
       actions: [
-        { type: 'star-o', text: '156' },
-        { type: 'like-o', text: '156' },
-        { type: 'message', text: '2' },
+        { type: "star-o", text: "156" },
+        { type: "like-o", text: "156" },
+        { type: "message", text: "2" }
       ],
-      paragraphList:[],
+      paragraphList: [],
       total: 0,
       loading: true,
       loadingMore: false,
@@ -222,7 +199,7 @@ export default {
       userinfo: {
         avatar: ""
       },
-      movie_id: this.$route.params.id,
+      movie_id: "",
       info: {
         images: {
           large: ""
@@ -234,7 +211,6 @@ export default {
         cats: [],
         directors: [{ avatars: { small: "" }, name: "" }]
       },
-      loading: true,
       isparagraph_add: false,
 
       // actions:[
@@ -246,51 +222,34 @@ export default {
       new_paragraph: {
         content: ""
       },
-      data: [
-        {
-          actions: ["Reply to"],
-          author: "Han Solo",
-          avatar:
-            "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-          content:
-            "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-          datetime: moment().subtract(1, "days")
-        },
-        {
-          actions: ["Reply to"],
-          author: "Han Solo",
-          avatar:
-            "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-          content:
-            "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-          datetime: moment().subtract(2, "days")
-        }
-      ],
-      moment
+      moment,
+      isarticle: false,
+      articleList: [],
+      articleTotal: 0
     };
   },
-  components:{
-    CommentList
+  components: {
+    CommentList,
+    Editor,
+    ArticleList
   },
   methods: {
     getinfo() {
       this.$axios.get("/api/movieinfo/" + this.movie_id).then(res => {
         console.log(res.data);
         this.info = res.data.data;
-    
+        this.vuex();
         setTimeout(() => {
           this.loading = false;
         }, 1000);
       });
     },
-    action(key){
-      if (key == 'replyto') {
+    action(key) {
+      if (key == "replyto") {
         this.replyTo();
       }
     },
-    replyTo() {
-
-    },
+    replyTo() {},
     paragraph() {
       this.isparagraph_add = !this.isparagraph_add;
     },
@@ -305,33 +264,63 @@ export default {
           message: "添加成功",
           type: "success"
         });
-        this.new_paragraph.content =""
+        this.new_paragraph.content = "";
+        this.getParagraph();
       });
     },
     getParagraph() {
       // debugger
-      this.$axios.get("/api/paragraph/"+ this.movie_id).then(res => {
+      this.$axios.get("/api/paragraph/" + this.movie_id).then(res => {
         this.paragraphList = res.data.data;
         console.log(this.paragraphList);
         this.total = res.data.totalnum;
-      })
+      });
     },
     getPage(page) {
       var req = {
-        movie_id : this.movie_id,
-        page : page
-      }
-      this.$axios.post("/api/paragraph/page",req).then(res => {
+        movie_id: this.movie_id,
+        page: page
+      };
+      this.$axios.post("/api/paragraph/page", req).then(res => {
         this.paragraphList = res.data.data;
-      })
+      });
+    },
+    getArticle() {
+      this.$axios.get("/api/article/" + this.movie_id).then(res => {
+        this.articleList = res.data.data;
+        console.log(this.articleList);
+        this.articleTotal = res.data.totalnum;
+      });
+    },
+    article() {
+      this.$refs.child.show = true;
+    },
+    getArticlePage(page) {
+      var req = {
+        movie_id: this.movie_id,
+        page: page
+      };
+      this.$axios.post("/api/article/page", req).then(res => {
+        this.articleList = res.data.data;
+      });
+    },
+    vuex() {
+      let moveinfo = {
+        id: this.info.id,
+        name: this.info.title,
+        img: this.info.images.small
+      };
+      this.$store.commit("setMovieinfo", moveinfo);
     }
   },
   created() {
+    this.movie_id = this.$route.params.id;
     this.getinfo();
     this.userinfo =
       this.$store.state.Userinfo ||
       JSON.parse(localStorage.getItem("setUserinfo"));
-      this.getParagraph()
+    this.getParagraph();
+    this.getArticle();
   }
 };
 </script>
@@ -388,7 +377,6 @@ export default {
   position: relative;
   margin-left: 5px;
   width: 185px;
-  z-index: 2;
 }
 .average {
   background: url("~@/assets/title_overview_sprite-1705639977._V_.png")
@@ -423,5 +411,10 @@ export default {
 }
 .total {
   margin-left: 10px;
+}
+.back {
+  font-size: 50px;
+  z-index: 10;
+  color: #fff;
 }
 </style>

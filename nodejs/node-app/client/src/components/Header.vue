@@ -22,7 +22,6 @@
 <style scoped>
 #header {
     position: relative;
-    z-index: 100;
     min-width: 1032px;
     overflow: hidden;
     background: #FFFFFF;
@@ -86,8 +85,8 @@ export default {
         }
     },
     created() {
-    this.userinfo = this.$store.state.Userinfo || JSON.parse(localStorage.getItem("setUserinfo")) ;
-    
+    this.userinfo = JSON.parse(localStorage.getItem("setUserinfo")) ;
+    this.$store.commit("setUserinfo",this.userinfo);
   },
 }
 </script>

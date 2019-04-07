@@ -12,7 +12,8 @@ const movieinfo = require('./routes/api/movieinfo')
 const boxoffice = require('./routes/api/boxoffice')
 const paragraph = require('./routes/api/paragraph')
 const paragraphreply = require('./routes/api/paragraphreply')
-
+const article = require('./routes/api/article')
+const articlereply = require('./routes/api/articlereply')
 // DB config
 const db = require('./config/keys').mongoURI;
 
@@ -39,6 +40,7 @@ app.use('/api/movieinfo',movieinfo)
 app.use('/api/boxoffice',boxoffice)
 app.use('/api/paragraph', paragraph)
 app.use('/api/paragraphreply', paragraphreply)
+app.use('/api/articlereply', articlereply)
 
 app.get('/',(req,res) => {
     res.end('hello world!')
