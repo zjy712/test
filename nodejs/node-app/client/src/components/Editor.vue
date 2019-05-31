@@ -7,7 +7,8 @@
           <img :src="info.img" alt>
           <p>{{info.name}}</p>
         </div>
-        <el-rate v-model="rating" show-text></el-rate>
+        <el-rate style="    margin-right: 10px;
+    width: 140px;    display: block;" v-model="rating" allow-half="true" show-score text-color="#ff9900"></el-rate>
       </div>
       <input type="text" v-model="title" placeholder="请输入标题">
       <div id="wangedit_toolbar" ref="wangedit_toolbar"></div>
@@ -130,6 +131,8 @@ export default {
           message: "添加成功",
           type: "success"
         });
+        this.$emit('ok');
+        this.show = false;
       });
     },
     // add2() {
@@ -206,10 +209,10 @@ export default {
 }
 .back {
   position: fixed;
-  right: 142px;
+  right: 127px;
   color: #fff;
   font-size: 30px;
-  top: 20px;
+  top: 62px;
   cursor: pointer;
 }
 
@@ -221,7 +224,7 @@ input {
   background: #fff;
   -webkit-appearance: none;
   width: 100%;
-  padding: 10px 20px;
+  padding: 25px 15px;
   outline: none;
   font-size: 30px;
   font-weight: 600;
@@ -245,7 +248,8 @@ input {
   -ms-flex-direction: column;
   flex-direction: column;
   width: 800px;
-  max-height: calc(100vh - 48px);
+  /* max-height: calc(100vh - 140px); */
+  height: 800px;
   margin-right: auto;
   margin-left: auto;
   -webkit-box-shadow: 0 5px 20px rgba(26, 26, 26, 0.1);
@@ -256,7 +260,11 @@ input {
   transition: max-height 0.8s ease;
 }
 .myWangEditor {
-  /* width: 688px; */
-  height: calc(100vh - 248px);
+  width: 100%;
+  height: 629px;
+  /* height: calc(100vh - 248px); */
+}
+#myWangEditor img {
+  width: 100%;
 }
 </style>

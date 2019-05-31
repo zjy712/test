@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const ParagraphReplySchema = new Schema({
     paragraphReply_id:{
-
+        type: Number,
     },
     paragraph_id: {
         type: Number,

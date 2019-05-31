@@ -5,6 +5,7 @@
         <div class="slate_wrapper">
           <div class="poster">
             <img :src="info.images.large" alt srcset>
+            <p>访问量: {{info.reviews_count}}</p>
           </div>
           <div class="titleBar">
             <div class="rating">
@@ -16,7 +17,7 @@
                   <span class="grey">/</span>
                   <span class="grey" itemprop="bestRating">10</span>
                 </div>
-                <span class="small" itemprop="ratingCount">53,695</span>
+                <span class="small" itemprop="ratingCount">{{info.rating_count}}</span>
               </div>
             </div>
             <div>
@@ -64,7 +65,7 @@
                   </div>
                 </div>
                 <div class="info">
-                  <div style="    display: flex;">
+                  <div style="display: flex;flex:1;">
                     <span>又名：</span>
                     <div class style="margin-left: 10px;">
                       <span>{{info.aka}}</span>
@@ -151,7 +152,7 @@
           <el-button style="float: right; padding: 3px 0" type="text" @click="article">影评</el-button>
         </div>
         <div class="Editor">
-          <Editor ref="child"></Editor>
+          <Editor v-on:ok="getArticle" ref="child"></Editor>
         </div>
         <div>
           <article-list
@@ -239,6 +240,7 @@ export default {
         console.log(res.data);
         this.info = res.data.data;
         this.vuex();
+        this.setDoucTitle()
         setTimeout(() => {
           this.loading = false;
         }, 1000);
@@ -311,6 +313,9 @@ export default {
         img: this.info.images.small
       };
       this.$store.commit("setMovieinfo", moveinfo);
+    },
+    setDoucTitle(){
+      document.title = this.info.title;
     }
   },
   created() {
@@ -321,6 +326,7 @@ export default {
       JSON.parse(localStorage.getItem("setUserinfo"));
     this.getParagraph();
     this.getArticle();
+    
   }
 };
 </script>
@@ -416,5 +422,9 @@ export default {
   font-size: 50px;
   z-index: 10;
   color: #fff;
+}
+.poster p {
+  text-align: center;
+  margin-top: 10px;
 }
 </style>

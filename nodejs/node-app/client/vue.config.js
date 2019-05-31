@@ -58,7 +58,8 @@ module.exports = {
                 pathRewrite: {
                     '^/api': ''
                 }
-            }
+            },
+
         },
         before: app => { }
     }

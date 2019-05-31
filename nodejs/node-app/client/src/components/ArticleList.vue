@@ -1,67 +1,75 @@
 <template>
   <div id="ArticleList">
     <div v-if="total !=0">
-      <div class="comment_li" v-for="(item, index) in list" :key="index">
-        <div class="avatar">
-          <img :src="item.user_avatar" alt>
-        </div>
-        <div class="main">
-          <div class="top">
-            <span class="name">{{item.user_name}}</span>
-            <el-rate style="margin-left:5px;" v-model="item.rating" disabled></el-rate>
-            <span class="date">{{item.date}}</span>
+      <div v-for="(item, index) in list" :key="index">
+        <div class="comment_li">
+          <div class="avatar">
+            <img :src="item.user_avatar" alt>
           </div>
-          <div class="title" @click="rowClick(item.article_id)">
-            <a>{{item.title}}</a>
-          </div>
-          <div class="contont">
-            <p>{{item.topic}}...</p>
-          </div>
-          <div class="active">
-            <span>
-              <a-icon type="like-o"/>
-              点赞({{item.like_num}})
-            </span>
-            <span>
-              <a-ico type="message"/>查看评论
-            </span>
-          </div>
-        </div>
-      </div>
-      <a-skeleton v-if="item.paragraph_id == currenID" :loading="loading" active>
-        <div class="replylist">
-          <div v-for="(item, index) in replyList" :key="index" class="reply_li">
-            <div class="avatar">
-              <img :src="item.user_avatar" alt>
+          <div class="main">
+            <div class="top">
+              <span  @click="goToPeople(item.user_name)" class="name">{{item.user_name}}</span>
+              <el-rate
+                style="margin-left:5px;"
+                v-model="item.rating"
+                disabled
+                show-score
+                text-color="#ff9900"
+              ></el-rate>
+              <span class="date">{{item.date |time}}</span>
             </div>
-            <div class="main">
-              <div class="top">
-                <span class="name">{{item.user_name}}</span>
-                <span class="date">{{item.date}}</span>
-              </div>
-              <div class="comment">{{item.content}}</div>
-              <div class="active2">
-                <span @click="replylistClick(item)">
-                  <a-ico type="message" style="margin-right: 8px"/>回复
-                </span>
-              </div>
+            <div class="title" @click="rowClick(item.article_id)">
+              <a>{{item.title}}</a>
+            </div>
+            <div class="contont">
+              <p>{{item.topic}}...</p>
+            </div>
+            <div class="active">
+              <!-- <span>
+                <a-icon type="like-o"/>
+                点赞({{item.like_num}})
+              </span>-->
+              <span @click="showReply(item)">
+                <a-ico type="message"/>查看评论
+              </span>
             </div>
           </div>
         </div>
-      </a-skeleton>
+        <a-skeleton v-if="item.article_id == currenID" :loading="loading" active>
+          <div class="replylist">
+            <div v-for="(item, index) in replyList" :key="index" class="reply_li">
+              <div class="avatar">
+                <img :src="item.user_avatar" alt>
+              </div>
+              <div class="main">
+                <div class="top">
+                  <span @click="goToPeople(item.user_name)" class="name">{{item.user_name}}</span>
+                  <span class="date">{{item.date |time}}</span>
+                </div>
+                <div class="comment">{{item.content}}</div>
+                <div class="active2">
+                  <span @click="replylistClick(item)">
+                    <a-ico type="message" style="margin-right: 8px"/>回复
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a-skeleton>
 
-      <div v-if="item.paragraph_id == currenID" class="edit">
-        <a-comment>
-          <a-avatar slot="avatar" :src="userinfo.avatar" alt="Han Solo"/>
-          <div slot="content">
-            <a-form-item>
-              <a-textarea v-model="content" content :placeholder="placeholder" :rows="4"></a-textarea>
-            </a-form-item>
-            <a-form-item>
-              <a-button htmlType="submit" @click="replyRaragraph(item)" type="primary">提交</a-button>
-            </a-form-item>
-          </div>
-        </a-comment>
+        <div v-if="item.article_id == currenID" class="edit">
+          <a-comment>
+            <a-avatar slot="avatar" :src="userinfo.avatar" alt="Han Solo"/>
+            <div slot="content">
+              <a-form-item>
+                <a-textarea v-model="content" content :placeholder="placeholder" :rows="4"></a-textarea>
+              </a-form-item>
+              <a-form-item>
+                <a-button htmlType="submit" @click="replyRaragraph(item)" type="primary">提交</a-button>
+              </a-form-item>
+            </div>
+          </a-comment>
+        </div>
       </div>
     </div>
     <div v-if="total== 0" class="list_zero">暂无数据</div>
@@ -75,17 +83,17 @@
         @change="change"
       />
     </div>
-    <article-details ref="child" :details="articleDetails"></article-details>
+    <!-- <article-details ref="child" :details="articleDetails"></article-details> -->
   </div>
 </template>
 
 <script>
-import ArticleDetails from "@c/ArticleDetails.vue";
+// import ArticleDetails from "@c/ArticleDetails.vue";
 
 export default {
-  components: {
-    ArticleDetails
-  },
+  // components: {
+  //   ArticleDetails
+  // },
   props: {
     list: {
       type: Array
@@ -112,6 +120,7 @@ export default {
       replyList: [],
       currenID: -1,
       rating: 2,
+      loading: true,
       articleDetails: {
         rating: 0,
         content: "",
@@ -122,14 +131,14 @@ export default {
   methods: {
     showReply(item) {
       console.log(item);
-      this.currenID = item.paragraph_id;
+      this.currenID = item.article_id;
       this.replyItem = item;
       this.placeholder = "回复:" + item.user_name;
-
-      this.$axios.get("/api/paragraphreply/" + item.paragraph_id).then(res => {
+      this.loading = true;
+      this.$axios.get("/api/articlereply/" + item.article_id).then(res => {
         this.replyList = res.data.data;
         console.log(this.replyList);
-        // this.total = res.data.totalnum;
+        this.loading = false;
       });
       this.showreply = !this.showreply;
     },
@@ -139,22 +148,23 @@ export default {
     replylistClick(item) {
       this.placeholder = "回复:" + item.user_name;
     },
-    replyRaragraph() {
+    replyRaragraph(item) {
       var req = {
-        paragraph_id: this.replyItem.paragraph_id,
+        article_id: this.replyItem.article_id,
         user_name: this.userinfo.name,
         user_avatar: this.userinfo.avatar,
         reply_name: this.replyItem.user_name,
         reply_avatar: this.replyItem.user_avatar,
         content: this.content
       };
-      this.$axios.post("/api/paragraphreply/add", req).then(res => {
+      this.$axios.post("/api/articlereply/add", req).then(res => {
         console.log(res);
         this.$message({
           message: "添加成功",
           type: "success"
         });
         this.content = "";
+        this.showReply(item);
       });
     },
     change(current, size) {
@@ -168,9 +178,25 @@ export default {
       });
     },
     rowClick(id) {
-      this.getDetails(id);
-      this.$refs.child.show = true;
-    }
+      this.$router.push({
+        name:'article',
+        params:{id}
+      })
+    },
+    goToPeople(userName) {
+      var loginUser =
+        this.$store.state.Userinfo ||
+        JSON.parse(localStorage.getItem("setUserinfo"));
+      if (userName == loginUser.name) {
+        this.$router.push({
+          name: "MyAll"
+        });
+      } else
+        this.$router.push({
+          name: "PeopleAll",
+          params: { user: userName }
+        });
+    },
   }
 };
 </script>
@@ -255,7 +281,7 @@ export default {
 }
 .active {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding-right: 27px;
 }
 .active span,

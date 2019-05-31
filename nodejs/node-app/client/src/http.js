@@ -44,6 +44,9 @@ axios.interceptors.request.use(config => {
 // 响应拦截
 axios.interceptors.response.use(response => {
     // endLoading();
+    if (response.data.code == '11') {
+        Message.error(response.data.msg);
+    }
     return response;
     // console.log(response);
     // return resdiglog(response.data);

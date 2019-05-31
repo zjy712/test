@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const ArticleReplySchema = new Schema({
     articleReply_id: {
-
+        type: Number,
+        default: -1
     },
     article_id: {
         type: Number,

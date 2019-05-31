@@ -58,7 +58,7 @@ router.post('/add', passport.authenticate("jwt", { session: false }), (req, res)
                     resolve(article);
                 })
         }).then(article => {
-            res.json({ code: 11, msg: 'success', data: article })
+            res.json({ code: 0, msg: 'success', data: article })
         })
     }
 
@@ -69,7 +69,7 @@ router.post('/add', passport.authenticate("jwt", { session: false }), (req, res)
             movie_id: req.body.movie_id,
             user_name: req.body.user_name,
             user_avatar: req.body.user_avatar,
-            title:req.body.title,
+            title: req.body.title,
             topic: req.body.topic,
             content: req.body.content,
             rating: req.body.rating
@@ -79,7 +79,7 @@ router.post('/add', passport.authenticate("jwt", { session: false }), (req, res)
         // 记录操作
         const newUserActive = {
             user_name: newArticle.user_name,
-            type: 'Article',
+            type: 'article',
             type_id: article_id
         };
         Module_Active.save(newUserActive)
@@ -89,18 +89,54 @@ router.post('/add', passport.authenticate("jwt", { session: false }), (req, res)
 })
 
 router.post('/details', passport.authenticate("jwt", { session: false }), (req, res) => {
-    var id = req.body.id;
-    Article.findOne({ article_id: req.body.id })
-        .then((articleinfo) => {
-            if (!articleinfo) {
-                res.json({ code: 11, msg: '不存在此文章' })
-            } else {
-                res.json({ code: 0, data: articleinfo })
-            }
+    
+    async function getMovieInfo(movie_id) {
+        return new Promise((resolve, err) => {
+            Movieinfo.findOne({ id: movie_id }).lean()
+                .then((MovieInfo) => {
+                    var movieInfo = {
+                        img: MovieInfo.images.large,
+                        title: MovieInfo.title,
+                        directors: MovieInfo.directors,
+                        genres: MovieInfo.genres,
+                        casts: MovieInfo.casts,
+                        countries: MovieInfo.countries
+                    }
+                    resolve(movieInfo)
+                })
+                .catch(err => {
+                    res.json({ code: 11, msg: '查询失败', err: 1 })
+                })
+        }).then(movieInfo => {
+            return movieInfo
         })
-        .catch(err => {
-            res.json({ code: 11, msg: '查询失败' })
+    }
+
+    async function getArticleInfo(id) {
+        return new Promise(resolve => {
+            Article.findOne({ article_id: id }).lean()
+                .then((articleinfo) => {
+                    if (!articleinfo) {
+                        res.json({ code: 11, msg: '不存在此文章' })
+                    } else {
+                        resolve(articleinfo)
+                    }
+                })
+                .catch(err => {
+                    res.json({ code: 11, msg: '查询失败' })
+                })
         })
+    }
+    
+    async function getDate(){
+        let id = req.body.id;
+        let data = await getArticleInfo(id);
+        let movieInfo = await getMovieInfo(data.movie_id);
+        data.movieInfo = movieInfo;
+        res.json({ code: 0, data})
+    }
+
+    getDate();
 })
 
 router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) => {
@@ -132,7 +168,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
         var data = await parentData();
         var totalnum = await getLength();
         // await childDate(data);
-        res.json({ code: 11, data: data, totalnum })
+        res.json({ code: 0, data: data, totalnum })
     }
     getArticle();
 })
@@ -158,8 +194,86 @@ router.post('/page', passport.authenticate("jwt", { session: false }), (req, res
         var data = await parentData(data);
         var totalnum = data.length;
         // await childDate(data);
-        res.json({ code: 11, data: data, totalnum })
+        res.json({ code: 0, data: data, totalnum })
     }
     getArticle();
 })
+
+router.post('/new', passport.authenticate("jwt", { session: false }), (req, res) => {
+
+    async function parentData() {
+        return new Promise((resolve, err) => {
+            Article.find({}).sort({ date: -1 }).limit(5).lean()
+                .then((articlelist) => {
+                    resolve(articlelist)
+                })
+                .catch(err => {
+                    res.json({ code: 11, msg: '查询失败' })
+                })
+        }).then(articlelist => {
+            return articlelist
+        })
+    }
+    async function getChild(article) {
+
+        var movieInfo = await getMovieInfo(article.movie_id)
+        article.movie_image = movieInfo.img;
+        article.movie_title = movieInfo.title;
+    }
+    async function getMovieInfo(movie_id) {
+        return new Promise((resolve, err) => {
+            Movieinfo.findOne({ id: movie_id }).lean()
+                .then((MovieInfo) => {
+                    var movieInfo = {
+                        img: MovieInfo.images.small,
+                        title: MovieInfo.title
+                    }
+                    resolve(movieInfo)
+                })
+                .catch(err => {
+                    res.json({ code: 11, msg: '查询失败', err: 1 })
+                })
+        }).then(movieInfo => {
+            return movieInfo
+        })
+    }
+    async function getArticle() {
+        var data = await parentData();
+        // await childDate(data);
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            element.content = ''
+            await getChild(element);
+        }
+        res.json({ code: 0, data: data })
+    }
+    getArticle();
+})
+
+router.post('/list', passport.authenticate("jwt", { session: false }), (req, res) => {
+    // var name = req.query.name;
+    var identity = req.user.identity;
+    if (identity == 0) {
+        res.json({ code: 11, msg: '访问不允许' });
+    }
+    Article.find({}).lean()
+        .then(Article => {
+            Article.forEach(ele => {
+                ele.content=''
+            });
+            res.json({ code: 0, data: Article });
+        })
+})
+
+router.post('/del', passport.authenticate("jwt", { session: false }), (req, res) => {
+    // var name = req.query.name;
+    var identity = req.user.identity;
+    var article_id = req.body.id;
+    if (identity == 0) {
+        res.json({ code: 11, msg: '访问不允许' });
+    }
+    Article.findOneAndRemove({ article_id})
+        .then(user => res.json({ code: 0, msg: 'ok' }))
+})
+
 module.exports = router

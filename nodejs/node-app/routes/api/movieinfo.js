@@ -37,7 +37,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
             if (!movieinfo) {
                 // return res.status(404).json({ msg: '无内容' })
                 var options = {
-                    url: keys.doubanOptions.movieUrl + id,
+                    url: keys.doubanOptions.movieUrl + id +'?apikey=0df993c66c0c636e29ecbb5344252a4a',
                     headers: keys.doubanOptions.headers
                 }
                 // 查询豆瓣api
@@ -118,7 +118,7 @@ router.post('/add', (req, res) => {
         summary: req.body.summary
     };
     new Movieinfo(newMovieinfo).save()
-        .then(movieinfo => res.json({ code: 11,msg: 'success' }))
+        .then(movieinfo => res.json({ code: 0,msg: 'success' }))
 })
 
 // $route POST api/movieinfo/edit
@@ -150,6 +150,16 @@ router.post('/delete/:id', passport.authenticate("jwt", { session: false }), (re
         })
         .catch(err => res.status(404).json('删除失败！'))
 })
+
+router.post('/list', passport.authenticate("jwt", { session: false }), (req, res) => {
+
+    Movieinfo.find({})
+        .then(list => {
+            res.json({ code: 0, data: list })
+        })
+        .catch(err => res.status(404).json('删除失败！'))
+})
+
 
 
 module.exports = router

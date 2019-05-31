@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 var request = require('request');
+const keys = require('../../config/keys')
 
 const BoxOffice = require('../../models/BoxOffice');
 const passport = require('passport');
@@ -12,28 +13,86 @@ router.get('/test', (req, res) => {
     res.json({ msg: "BoxOffice works" })
 })
 
-router.get('/', passport.authenticate("jwt", { session: false }), (req, res) => {
+router.get('/cn', passport.authenticate("jwt", { session: false }), (req, res) => {
 
-    //神箭手api
-    var options = {
-        url: 'https://api.shenjian.io/?appid=5b06c9b972c9896b070f01cbd12a3fea',
+    async function getBoxDate() {
+        //神箭手api
+        return new Promise((resolve) => {
+            var options = keys.doubanOptions.cnBoxUrl;
+            request(options, (err, res1, body) => {
+                var info = JSON.parse(body);
+                resolve(info.data)
+
+            })
+        })
+
     }
 
-    request(options, (err, res1, body) => {
-        var info = JSON.parse(body);
-        if (info.error_code == 0) {
-            const newboxoffice = new BoxOffice({
-                data : info.data
-            })
-            // 储存到本地服务器
-            newboxoffice.save()
-                .then(boxoffice => res.json({code: 0,data:boxoffice.data}))
-                .catch(err => console.log(err))
-        } else {
-            res.json({ code: 11, msg: '错误' })
-        }
+    async function getMovieID(item) {
+        var movieName = encodeURI(item.MovieName);
+        var options = {
+            url: keys.doubanOptions.searchUrl + movieName,
+            headers: {
+                'Content-Type': 'text/html,application/xhtml+xml,application/xml,charset=utf-8',
+            }
+        };
+        return new Promise((resolve => {
+            request(options, (err, res1, body) => {
+                var info = JSON.parse(body);
 
-    })
+                try {
+                    if (info[0].id) {
+                    item.id = info[0].id;
+                    resolve(item)
+                }
+                } catch (error) {
+                    console.log(error);
+                    
+                    resolve(item)
+                }
+
+                
+                
+            })
+        }))
+    }
+
+    async function getDate() {
+        var boxDate = await getBoxDate();
+        for (let i = 0; i < boxDate.length-1; i++) {
+            const ele = boxDate[i];
+            await getMovieID(ele)
+        }
+        boxDate = boxDate.slice(0,-1);
+        res.json({ code: 0, data: boxDate })
+    }
+    getDate()
+})
+
+router.get('/us', passport.authenticate("jwt", { session: false }), (req, res) => {
+
+    async function getBoxDate() {
+        //豆瓣api
+        return new Promise((resolve) => {
+            var options = keys.doubanOptions.usBoxUrl +'?apikey=0df993c66c0c636e29ecbb5344252a4a';
+            request(options, (err, res1, body) => {
+                var info = JSON.parse(body);
+                resolve(info)
+
+            })
+        })
+
+    }
+
+    async function getDate() {
+        var boxDate = await getBoxDate();
+        for (let i = 0; i < boxDate.subjects.length; i++) {
+            const element = boxDate.subjects[i];
+            element.box = (element.box/10000).toFixed(2)
+        }
+        res.json({ code: 0, data: boxDate })
+    }
+    getDate()
 })
 
 module.exports = router

@@ -2,12 +2,20 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import axios from "./http";
+
 
 import '../src/css/main.css'
 
 
 import ElementUI from 'element-ui';
+
+import moment from 'moment'
+
+Vue.filter('time', function (value, formatString) {
+  formatString = formatString || 'YYYY-MM-DD HH:mm';
+  return moment(value).format(formatString);
+})
+
 // import {
 //   Button, Select, Input, InputNumber, Card, Message, Loading
 // } from 'element-ui';
@@ -33,7 +41,7 @@ Vue.use(ElementUI);
 
 Vue.config.productionTip = false
 
-Vue.prototype.$axios = axios;
+
 
 
 new Vue({

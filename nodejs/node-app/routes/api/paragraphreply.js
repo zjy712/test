@@ -9,6 +9,7 @@ const ParagraphReply = require('../../models/ParagraphReply');
 // const UserActive = require('../../models/UserAcive');
 
 const Module_Active = require('../../modules/Module_Active');
+const Module_Message = require('../../modules/Module_Message');
 
 const passport = require('passport')
 
@@ -40,9 +41,9 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
 
     async function getParagraphReply() {
         var data = await parentData();
-        var totalnum = await getLength();
+        var totalnum = await getLength()+1;
         // await childDate(data);
-        res.json({ code: 11, data: data, totalnum })
+        res.json({ code: 0, data: data, totalnum })
     }
     getParagraphReply();
 })
@@ -66,7 +67,7 @@ router.post('/add', passport.authenticate("jwt", { session: false }), (req, res)
                     resolve(paragraph);
                 })
         }).then(paragraph => {
-            res.json({ code: 11, msg: 'success', data: paragraph })
+            res.json({ code: 0, msg: 'success', data: paragraph })
         })
     }
 
@@ -86,10 +87,21 @@ router.post('/add', passport.authenticate("jwt", { session: false }), (req, res)
         // 记录操作
         const newUserActive = {
             user_name: newParagraphReply.user_name,
-            type: 'ParagraphReply',
+            type: 'paragraphReply',
             type_id: paragraphReply_id
         };
         Module_Active.save(newUserActive)
+
+        const newMessage = {
+            user_name: newParagraphReply.user_name,
+            user_avatar: newParagraphReply.user_avatar,
+            reply_name: newParagraphReply.reply_name,
+            reply_avatar: newParagraphReply.reply_avatar,
+            type: 'paragraphReply',
+            type_id: paragraphReply_id,
+            content: newParagraphReply.content,
+        }
+        Module_Message.save(newMessage);
     }
     add()
 

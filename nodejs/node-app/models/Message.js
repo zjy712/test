@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const MessageSchema = new Schema({
     message_id: {
         type: Number,
-        default: -1
     },
     user_name: {
         type: String,
@@ -47,4 +46,4 @@ const MessageSchema = new Schema({
     },
 })
 
-module.exports = Message = mongoose.model("paragraph", MessageSchema);
+module.exports = Message = mongoose.model("message", MessageSchema);

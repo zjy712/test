@@ -8,15 +8,15 @@
           </div>
           <div class="main">
             <div class="top">
-              <span class="name">{{item.user_name}}</span>
-              <span class="date">{{item.date}}</span>
+              <span @click="goToPeople(item.user_name)" class="name">{{item.user_name}}</span>
+              <span class="date">{{item.date |time}}</span>
             </div>
             <div class="comment">{{item.content}}</div>
             <div class="active">
-              <span>
+              <!-- <span>
                 <a-icon type="like-o"/>
                 点赞({{item.like_num}})
-              </span>
+              </span> -->
               <span @click="showReply(item)">
                 <a-ico type="message"/>查看评论
               </span>
@@ -31,8 +31,8 @@
             </div>
             <div class="main">
               <div class="top">
-                <span class="name">{{item.user_name}}</span>
-                <span class="date">{{item.date}}</span>
+                <span @click="goToPeople(item.user_name)" class="name">{{item.user_name}}</span>
+                <span class="date">{{item.date |time}}</span>
               </div>
               <div class="comment">{{item.content}}</div>
               <div class="active2">
@@ -110,6 +110,20 @@ export default {
     };
   },
   methods: {
+    goToPeople(userName) {
+      var loginUser =
+        this.$store.state.Userinfo ||
+        JSON.parse(localStorage.getItem("setUserinfo"));
+      if (userName == loginUser.name) {
+        this.$router.push({
+          name: "MyAll"
+        });
+      } else
+        this.$router.push({
+          name: "PeopleAll",
+          params: { user: userName }
+        });
+    },
     showReply(item) {
       console.log(item);
       this.currenID = item.paragraph_id;
@@ -239,7 +253,7 @@ export default {
 }
 .active {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding-right: 27px;
 }
 .active span,

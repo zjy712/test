@@ -36,7 +36,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
 
     async function getLength() {
         return new Promise((resolve, err) => {
-            Paragraph.countDocuments({ movie_id: id }).then(data => {
+            Paragraph.countDocuments({ id: id, type: 'movie' }).then(data => {
                 resolve(data);
             })
         })
@@ -44,7 +44,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
 
     async function parentData() {
         return new Promise((resolve, err) => {
-            Paragraph.find({ movie_id: id }).sort({ date: -1 }).limit(5).lean()
+            Paragraph.find({ id: id, type: 'movie' }).sort({ date: -1 }).limit(5).lean()
                 .then((paragraph) => {
                     resolve(paragraph)
                 })
@@ -60,7 +60,7 @@ router.get('/:id', passport.authenticate("jwt", { session: false }), (req, res) 
         var data = await parentData();
         var totalnum = await getLength();
         // await childDate(data);
-        res.json({ code: 11, data: data, totalnum})
+        res.json({ code: 0, data: data, totalnum})
     }
     getParagraph();
 })
@@ -72,7 +72,7 @@ router.post('/page', passport.authenticate("jwt", { session: false }), (req, res
     var page = req.body.page -1 ;
     async function parentData() {
         return new Promise((resolve, err) => {
-            Paragraph.find({ movie_id: id }).sort({ date: -1 }).skip(page*5).limit(5).lean()
+            Paragraph.find({ id: id, type: 'movie'}).sort({ date: -1 }).skip(page*5).limit(5).lean()
                 .then((paragraph) => {
                     resolve(paragraph)
                 })
@@ -88,7 +88,7 @@ router.post('/page', passport.authenticate("jwt", { session: false }), (req, res
         var data = await parentData(data);
         var totalnum = data.length;
         // await childDate(data);
-        res.json({ code: 11, data: data, totalnum })
+        res.json({ code: 0, data: data, totalnum })
     }
     getParagraph();
 })
@@ -118,7 +118,7 @@ router.post('/add', passport.authenticate("jwt", { session: false }), (req, res)
 
     async function getLength() {
         return new Promise((resolve, err) => {
-            Paragraph.countDocuments({}).then(data => {
+            Paragraph.countDocuments().then(data => {
                 resolve(data);
             })
         })
@@ -131,15 +131,16 @@ router.post('/add', passport.authenticate("jwt", { session: false }), (req, res)
                     resolve(paragraph);
                 })
         }).then(paragraph => {
-            res.json({ code: 11, msg: 'success', data: paragraph })
+            res.json({ code: 0, msg: 'success', data: paragraph })
         })
     }
 
     async function add() {
-        var paragraph_id = await getLength();
+        var paragraph_id = await getLength()+1;
         const newParagraph = {
             paragraph_id: paragraph_id,
-            movie_id: req.body.movie_id,
+            id: req.body.movie_id,
+            type: 'movie',
             user_name: req.body.user_name,
             user_avatar: req.body.user_avatar,
             content: req.body.content,
@@ -149,10 +150,11 @@ router.post('/add', passport.authenticate("jwt", { session: false }), (req, res)
         // 记录操作
         const newUserActive = {
             user_name: newParagraph.user_name,
-            type: 'Paragraph',
+            type: 'paragraph',
             type_id: paragraph_id
         };
         Module_Active.save(newUserActive)
+        
     }
     add()
 

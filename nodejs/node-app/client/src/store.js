@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     Userinfo: {},
     Movieinfo:{},
+    MessageInfo:{},
   },
   mutations: {
     setUserinfo(state, data) {
@@ -15,9 +16,13 @@ export default new Vuex.Store({
     setMovieinfo(state, data) {
       state.Movieinfo = data;
     },
+    setMessageInfo(state, data) {
+      state.MessageInfo = data;
+    },
   },
   actions: {
     commitLoginState: ({ commit }, Userinfo) => commit('setUserinfo', Userinfo),
     commitMovieinfo: ({ commit }, Movieinfo) => commit('setMovieinfo', Movieinfo),
+    commitMessageInfo: ({ commit }, MessageInfo) => commit('setMessageInfo', MessageInfo),
   }
 })

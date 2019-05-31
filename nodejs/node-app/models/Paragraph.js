@@ -6,7 +6,11 @@ const ParagraphSchema = new Schema({
         type: Number,
         default: -1
     },
-    movie_id: {
+    type: {
+        type: String,
+        default: 'movie'
+    },
+    id: {
         type: String,
         required: true
     },
@@ -21,8 +25,8 @@ const ParagraphSchema = new Schema({
         type: String,
         required: true
     },
-    like_num:{
-        type:Number,
+    like_num: {
+        type: Number,
         default: 0
     },
     date: {

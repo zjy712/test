@@ -17,14 +17,22 @@ const UserSchema = new Schema({
     avatar: {
         type: String,
     },
-    data: {
-        type: Date,
-        default: Date.now
+    signature: {
+        type: String,
+        default: ''
+    },
+    isban:{ 
+        type: Number,
+        default:0
     },
     identity:{
         type: String,
         required:false
-    }
+    },
+    data: {
+        type: Date,
+        default: Date.now
+    },
 })
 
 module.exports = User = mongoose.model("users",UserSchema);

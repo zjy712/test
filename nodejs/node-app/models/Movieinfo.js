@@ -8,7 +8,7 @@ const MovieinfoSchema = new Schema({
             default: 0
         },
         average: {
-            type: String,
+            type: Number,
             default: 0
         }
     },

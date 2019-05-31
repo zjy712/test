@@ -19,16 +19,16 @@ router.post(
     avatarUpload.single('avatar'),
     (req, res) => {
         console.log(req.file);
-        fs.rename(req.file.path,'public/avatar/'+req.file.originalname,function (err) {
+        fs.rename(req.file.path, 'public/avatar/' + req.file.originalname, function (err) {
             if (err) {
                 throw err
             }
             console.log("上传成功");
-            
+
         })
 
         var url = 'http://47.94.194.153:5000/avatar/' + req.file.originalname
-        res.json({ code: 11, data: {url:url}})
+        res.json({ code: 0, data: { url: url } })
 
     }
 );
@@ -57,6 +57,7 @@ router.post('/register', (req, res) => {
                     email: req.body.email,
                     avatar: req.body.avatar,
                     password: req.body.password,
+                    signature: req.body.signature,
                     identity: req.body.identity
                 })
 
@@ -98,10 +99,13 @@ router.post('/login', (req, res) => {
                             identity: user.identity
                         }
                         const data = {
-                            name:user.name,
-                            email:user.email,
-                            avatar:user.avatar,
-                            data:user.data
+                            name: user.name,
+                            email: user.email,
+                            avatar: user.avatar,
+                            data: user.data,
+                            identity: user.identity,
+                            isban:user.isban,
+                            signature: user.signature
                         }
                         jwt.sign(rule, keys.secretOrkey, { expiresIn: 3600 }, (err, token) => {
                             res.json({
@@ -130,6 +134,72 @@ router.get('/current', passport.authenticate("jwt", { session: false }), (req, r
     });
 })
 
+router.post('/changePassWord', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    const newPassWord = req.body.newPassWord;
+    //查询数据库
+    User.findOne({ email })
+        .then(user => {
+            if (!user) {
+                return res.status(400).json({ msg: '用户不存在' })
+            }
+            bcrypt.compare(password, user.password)
+                .then(isMatch => {
+                    if (isMatch) {
 
+                        bcrypt.genSalt(10, function (err, salt) {
+                            bcrypt.hash(newPassWord, salt, (err, hash) => {
+                                if (err) {
+                                    throw err
+                                }
+                                User.findOneAndUpdate({ email }, { $set: { password:hash} }, { new: true })
+                                    .then(profiles => res.json({code:0,msg:'修改成功'}))
+                            });
+                        });
+                        
+                    } else {
+                        return res.status(400).json({ msg: '密码错误' })
+                    }
+
+                })
+        })
+})
+
+router.get('/info', passport.authenticate("jwt", { session: false }), (req, res) => {
+    var name = req.query.name;
+    User.findOne({ name }).lean()
+        .then( userInfo => {
+            let data = {
+                name: userInfo.name,
+                email:userInfo.email,
+                avatar:userInfo.avatar
+            }
+            res.json({ code: 0, data: userInfo||[]});
+        } )
+})
+
+router.post('/list', passport.authenticate("jwt", { session: false }), (req, res) => {
+    // var name = req.query.name;
+    var identity = req.user.identity;
+    if (identity == 0) {
+        res.json({ code: 11, msg: '访问不允许'});
+    }
+    User.find({}).lean()
+        .then(userInfo => {
+            res.json({ code: 0, data: userInfo });
+        })
+})
+
+router.post('/ban', passport.authenticate("jwt", { session: false }), (req, res) => {
+    var nameBan = req.body.name;
+    var current = req.body.current==0?1:0;
+
+    var identity = req.user.identity;
+    if (identity == 0) {
+        res.json({ code: 11, msg: '访问不允许' });
+    }
+    User.findOneAndUpdate({ name: nameBan }, { $set: { isban: current } }).then(user => res.json({ code: 0, msg: 'ok' }))
+})
 
 module.exports = router

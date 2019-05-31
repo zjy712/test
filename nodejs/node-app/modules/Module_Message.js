@@ -7,7 +7,7 @@ Module_Message = {
     save: function (newMessage) {
         Message.countDocuments({}).then(data => {
             var id = data + 1;
-            newMessage.Message_id = id;
+            newMessage.message_id = id;
             new Message(newMessage).save()
                 .then(message => {
                     console.log(message);

@@ -5,64 +5,70 @@
       <div class="top">
         <div>
           <img :src="moviceInfo.img" alt>
-          <b> <a>{{moviceInfo.name}}</a> </b>
+          <b>
+            <a>{{moviceInfo.name}}</a>
+          </b>
         </div>
-        <el-rate v-model="details.rating" disabled show-text></el-rate>
+        <el-rate v-model="details.rating" disabled show-score text-color="#ff9900"></el-rate>
       </div>
       <h1>{{details.title}}</h1>
       <div class="user">
-          <img :src="details.user_avatar" alt="">
-          <span> <a >{{details.user_name}}</a> </span>
-          <span >{{details.date}}</span>
+        <img :src="details.user_avatar" alt>
+        <span @click="goToPeople(details.user_name)">
+          <a>{{details.user_name}}</a>
+        </span>
+        <span>{{details.date}}</span>
       </div>
-      <div class="content" v-html="details.content">
-
-      </div>
+      <div class="content" v-html="details.content"></div>
     </div>
     <div class="back" @click="back">X</div>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "ArticleDetails",
-  props:['details'],
+  props: ["details"],
   data() {
     return {
       editorContent: "", //内容
       editorContent2: "",
       rating: "",
       title: "",
-      moviceInfo:{
-        name:'',
-        img:''
+      moviceInfo: {
+        name: "",
+        img: ""
       },
       show: false,
-      userinfo:null,
-      editorText:''
+      userinfo: null,
+      editorText: ""
     };
   },
   created() {},
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
-
-    // add2() {
-    //   console.log(this.editorText.slice(0,0));
-      
-    // },
+    goToPeople(userName) {
+      var loginUser =
+        this.$store.state.Userinfo ||
+        JSON.parse(localStorage.getItem("setUserinfo"));
+      if (userName == loginUser.name) {
+        this.$router.push({
+          name: "MyAll"
+        });
+      } else
+        this.$router.push({
+          name: "PeopleAll",
+          params: { user: userName }
+        });
+    },
     back() {
       this.show = false;
-    },
-
+    }
   },
   created() {
-    this.moviceInfo = this.$store.state.Movieinfo ;
-    this.userinfo =JSON.parse(localStorage.getItem("setUserinfo")) ;
-
-  },
+    this.moviceInfo = this.$store.state.Movieinfo;
+    this.userinfo = JSON.parse(localStorage.getItem("setUserinfo"));
+  }
 };
 </script>
 
@@ -103,7 +109,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
-  padding: 0 15px;
+  padding: 7px 15px;
   background-color: #f8f8f8;
 }
 
@@ -119,32 +125,33 @@ export default {
 }
 .back {
   position: fixed;
-  right: 142px;
+  right: 127px;
   color: #fff;
   font-size: 30px;
-  top: 20px;
+  top: 62px;
   cursor: pointer;
 }
 h1 {
-    padding: 10px ;
-    margin-bottom: 0px;
+  padding: 10px;
+  margin-bottom: 0px;
 }
 .user {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
+  height: 45px;
 }
-.user  img{
-    height: 30px;
-    border-radius: 50%;
+.user img {
+  height: 30px;
+  border-radius: 50%;
 }
 .user span {
-    margin-left: 8px;
+  margin-left: 8px;
 }
 .content {
-    height: 804px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    padding: 15px;
+  height: 804px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 15px;
 }
 input {
   resize: none;
@@ -178,7 +185,7 @@ input {
   -ms-flex-direction: column;
   flex-direction: column;
   width: 800px;
-  max-height: calc(100vh - 48px);
+  max-height: calc(100vh - 140px);
   margin-right: auto;
   margin-left: auto;
   -webkit-box-shadow: 0 5px 20px rgba(26, 26, 26, 0.1);
