@@ -5,6 +5,10 @@ nodejs/node-app/client/.DS_Store
 nodejs/node-app/client/node_modules
 nodejs/node-app/client/dist
 
+# ts/test1/node_modules
+
+node_modules/
+
 # local env files
 nodejs/node-app/client/.env.local
 nodejs/node-app/client/.env.*.local
